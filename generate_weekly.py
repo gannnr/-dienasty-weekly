@@ -191,3 +191,5 @@ if __name__=="__main__":
     except Exception as error:
         print("SAFE FAILURE (existing page unchanged):",error,file=sys.stderr)
         sys.exit(1)
+
+# Rebuild trigger: publish upgraded weekly page immediately.
