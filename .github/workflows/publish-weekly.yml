@@ -1,6 +1,10 @@
 name: Publish DieNasty weekly recap
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'generate_weekly.py'
   schedule:
     - cron: '0 8 * * 2'
       timezone: 'America/Chicago'
