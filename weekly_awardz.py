@@ -122,7 +122,7 @@ def assign(week,teams,scores,matchups,season_wins,expected_wins,season_points,we
         raise AssertionError("Weekly Awardz uniqueness failure")
     return output
 
-def render(awards):
+def render(awards, avatars=None):
     sections=['<h2>🏆 Weekly Awardz</h2><p class="small">Ten managers. Ten different trophies. Data-backed chaos, most dramatic first.</p><div class="two">']
     for a in awards:
         sections.append('<div class="card" data-award-id="'+html.escape(a["award_id"])+'" data-manager-id="'+str(a["roster_id"] )+'"><span class="label">'+html.escape(a["emoji"]+" "+a["award"])+'</span><h3>'+html.escape(a["name"])+'</h3><p>'+a["evidence"]+'</p></div>')
