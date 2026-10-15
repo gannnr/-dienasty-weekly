@@ -140,7 +140,7 @@ details summary{cursor:pointer;list-style:none;display:flex;align-items:center;j
 .track{height:11px;background:#303a50;border-radius:10px;overflow:hidden;flex:1}.bar{display:block;height:100%;background:linear-gradient(90deg,#69b1ff,#32d3c4);border-radius:10px}
 .line{display:flex;align-items:center;gap:8px;margin:10px 0}.line .name{width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:800}.line .value{width:74px;text-align:right;font-size:11px}
 table{border-collapse:collapse;width:100%;font-size:12px}th{text-align:left;color:var(--muted)}td,th{border-bottom:1px solid var(--line);padding:10px 5px}td:last-child,th:last-child{text-align:right}
-footer{color:var(--muted);font-size:12px;margin-top:36px}\n.manager-avatar{width:42px;height:42px;object-fit:cover;border-radius:50%;vertical-align:middle;border:2px solid #69b1ff;margin-right:8px}
+footer{color:var(--muted);font-size:12px;margin-top:36px}\n.manager-avatar{width:42px;height:42px;object-fit:cover;border-radius:50%;vertical-align:middle;border:2px solid #69b1ff;margin-right:8px;flex-shrink:0}.manager{font-size:12px;line-height:1.1;min-width:0;flex:1;overflow-wrap:anywhere;display:flex;align-items:center}.record{min-width:58px}.pill{flex-shrink:0;font-size:10px}.award-heading{display:flex;align-items:center;gap:12px;margin-bottom:12px}.award-icon{width:56px;height:56px;object-fit:contain;flex-shrink:0}.award-heading .label{font-size:11px}.award-recipient{display:flex;align-items:center;gap:7px;overflow-wrap:anywhere}.nfl-player-header{display:flex;align-items:center;gap:13px;margin:12px 0}.nfl-headshot{width:76px;height:76px;object-fit:contain;background:#28354e;border-radius:16px;border:2px solid #69b1ff}
 </style>"""
     def esc(r):
         return safe(teams[r].strip())
@@ -227,7 +227,9 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}\n.manager-avatar{width
             if len(metrics) != 4 or not entry.get('name') or not entry.get('story'):
                 raise ValueError('NFL reality-check snapshot is missing required metrics')
             metrics_html=''.join(f'<div class="fact"><span>{safe(label)}</span><b>{safe(value)}</b></div>' for label,value in metrics)
-            parts.append(f'<div class="card"><span class="label">{safe(entry.get("label","NFL REALITY"))}</span><h3>{safe(entry["name"])}</h3><p class="small">{safe(entry.get("team",""))} vs {safe(entry.get("opponent",""))}</p><div class="facts">{metrics_html}</div><p>{safe(entry["story"])}</p></div>')
+            player_id = entry.get("espn_id")
+            headshot = f'https://a.espncdn.com/i/headshots/nfl/players/full/{safe(player_id)}.png' if player_id and str(player_id).isdigit() else 'assets/nfl-headshots/default.svg'
+            parts.append(f'<div class="card"><span class="label">{safe(entry.get("label","NFL REALITY"))}</span><div class="nfl-player-header"><img class="nfl-headshot" src="{headshot}" alt="{safe(entry["name"])} headshot" onerror="this.onerror=null;this.src=\'assets/nfl-headshots/default.svg\'"><div><h3>{safe(entry["name"])}</h3><p class="small">{safe(entry.get("team",""))} vs {safe(entry.get("opponent",""))}</p></div></div><div class="facts">{metrics_html}</div><p>{safe(entry["story"])}</p></div>')
     else:
         parts += ['<h2>NFL reality check</h2><div class="card"><p>Advanced NFL player-game stats are awaiting verification for this week. We do not recycle last week\'s numbers.</p></div>']
     parts += ['<h2>Next week\'s propaganda</h2>',
