@@ -67,7 +67,14 @@ def generate(week, facts):
         if not validate(narratives,facts):
             raise ValueError("AI prose failed structural or factual safeguards")
     except Exception as error:
-        print("AI editor unavailable or failed validation, retaining original manager summaries:",str(error)[:250])
+        detail=str(error)[:250]
+        if hasattr(error,"read"):
+            try:
+                body=json.loads(error.read().decode("utf-8"))
+                detail=str(body.get("error",{}).get("message",detail))[:350]
+            except (ValueError,UnicodeError):
+                pass
+        print("AI editor unavailable or failed validation, retaining original manager summaries:",detail)
         return None
     saved.parent.mkdir(parents=True,exist_ok=True)
     saved.write_text(json.dumps(narratives,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
