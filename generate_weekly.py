@@ -300,3 +300,5 @@ if __name__=="__main__":
 # Retest AI JSON response validation.
 
 # Funded API verification retry.
+
+# Diagnose AI story word-count gate.
