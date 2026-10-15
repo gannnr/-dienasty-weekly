@@ -294,3 +294,5 @@ if __name__=="__main__":
 # Trigger supervised Week 5 AI integration test; safe fallback remains enabled.
 
 # Diagnostic run for API request validation.
+
+# JSON format correction integration run.
