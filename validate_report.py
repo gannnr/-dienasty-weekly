@@ -17,6 +17,8 @@ checks = {
     "lucky dawg rank columns": all(text in page for text in ["Expected wins","Actual wins","Luck"]),
     "weekly awardz": "Weekly Awardz" in page,
     "ten award cards": page.count("data-award-id=") == 10,
+    "ten unique awards": len(set(re.findall(r'data-award-id="([^"]+)"',page))) == 10,
+    "one award per manager": len(set(re.findall(r'data-manager-id="([^"]+)"',page))) == 10,
     "retired redundant sections": "Weekly hardware" not in page and "The league is cooked" not in page,
     "correct league": "1312113845380083712" in page,
     "expected wins math": "expected_wins[rid]" in source,
