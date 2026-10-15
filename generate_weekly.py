@@ -182,34 +182,32 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}
             f'<div class="facts"><div class="fact"><span>WEEK {latest} POINTS</span><b>{fmt(own)}</b></div><div class="fact"><span>WEEKLY RANK</span><b>#{placement} / {n}</b></div><div class="fact"><span>ALL-PLAY THIS WEEK</span><b>{ap}-{n-1-ap}</b></div><div class="fact"><span>SEASON POINTS</span><b>{fmt(totals[rid])}</b></div></div>',
             f'<p><strong>Match:</strong> {esc(rid)} {"beat" if result=="WIN" else "lost to" if result=="LOSS" else "tied"} {esc(opponent)}, {fmt(own)}–{fmt(opp)}. {match_story}</p>',
             f'<p><strong>Season vibe:</strong> #{season_place} in total points with a {record} record. {season_story} Scoring-deserved wins: {expected_wins[rid]:.2f}; actual: {wins[rid]}.</p><p><strong>Top automatic best-ball scorers:</strong> {best_ball_text(rid)}</p></details>']
-    # Accessible, dependency-free scatter plot of schedule luck.
-    upper = max(1, latest)
-    def sx(value): return 55 + 485 * value / upper
-    def sy(value): return 452 - 395 * value / upper
-    plot = ['<h2>Schedule justice chart</h2><p class="small">Scoring-deserved wins on the horizontal axis; actual wins vertically. The diagonal represents fair treatment.</p><div class="card"><svg viewBox="0 0 600 515" role="img" aria-label="Expected wins versus actual wins scatter chart" style="width:100%;height:auto">']
+    # Week-by-week all-play record, directly after the manager cards.
+    parts += [f'<h2>Week {latest} All-Play Record</h2><p class="small">How many of the other nine teams each manager outscored this week. This is NOT the head-to-head record.</p><div class="card"><table><thead><tr><th>Rank</th><th>Manager</th><th>All-play</th><th>Week pts</th></tr></thead><tbody>']
+    for i,rid in enumerate(rank,1):
+        parts.append(f'<tr><td>{i}</td><td>{esc(rid)}</td><td>{allplay[rid]}-{len(expected)-1-allplay[rid]}</td><td>{fmt(current[rid])}</td></tr>')
+    parts += ['</tbody></table></div>']
+
+    # Rank chart dots and rows by actual minus expected season wins.
+    luck_order = sorted(expected,key=lambda r:(-(wins[r]-expected_wins[r]),-wins[r],r))
+    parts += ['<h2>Total Season Lucky Dawg Rankings</h2><p class="small">Actual minus expected wins. Positive = favorable matchups; negative = brutal scheduling. Every week, 9-0 all-play earns 1 expected win, not 9 actual wins.</p>']
+    upper=max(1,latest)
+    def sx(value):return 55+485*value/upper
+    def sy(value):return 452-395*value/upper
+    parts += ['<div class="card"><svg viewBox="0 0 600 515" role="img" aria-label="Season lucky dawg rankings: expected versus actual wins" style="width:100%;height:auto">']
     for tick in range(upper+1):
-        px,py = sx(tick),sy(tick)
-        plot.append(f'<line x1="{px:.1f}" x2="{px:.1f}" y1="57" y2="452" stroke="#35415b"/><line x1="55" x2="540" y1="{py:.1f}" y2="{py:.1f}" stroke="#35415b"/><text x="{px:.1f}" y="477" fill="#a9b4c8" font-size="12" text-anchor="middle">{tick}</text><text x="41" y="{py+4:.1f}" fill="#a9b4c8" font-size="12" text-anchor="end">{tick}</text>')
-    plot.append('<line x1="55" y1="452" x2="540" y2="57" stroke="#d1d6df" stroke-width="2" stroke-dasharray="5 5"/><text x="300" y="505" fill="#a9b4c8" font-size="12" text-anchor="middle">EXPECTED WINS</text><text x="16" y="255" fill="#a9b4c8" font-size="12" text-anchor="middle" transform="rotate(-90 16 255)">ACTUAL WINS</text>')
-    for rid in sorted(expected):
-        luck = wins[rid] - expected_wins[rid]
-        color = '#ffc85c' if luck > 1 else '#b49cff' if luck < -1 else '#69b1ff'
-        plot.append(f'<circle cx="{sx(expected_wins[rid]):.1f}" cy="{sy(wins[rid]):.1f}" r="12" fill="{color}" stroke="#0b1020" stroke-width="2"><title>#{ordered.index(rid)+1} {esc(rid)}: {expected_wins[rid]:.2f} expected vs {wins[rid]} actual</title></circle><text x="{sx(expected_wins[rid]):.1f}" y="{sy(wins[rid])+4:.1f}" font-size="11" font-weight="900" text-anchor="middle" fill="#0b1020">{ordered.index(rid)+1}</text>')
-    plot.append('</svg><p class="small">Gold = lucky by more than one win; purple = cursed by more than one; blue = roughly fair.</p></div>')
-    parts += plot
-    parts.append('<div class="card"><h3>Manager dot legend</h3><p class="small">Each dot number corresponds to a manager.</p>')
-    for rid in ordered:
-        parts.append(f'<p>#{ordered.index(rid)+1} <strong>{esc(rid)}</strong> · Actual {wins[rid]} · Expected {expected_wins[rid]:.2f} · Luck {wins[rid]-expected_wins[rid]:+.2f}</p>')
-    parts.append('<p class="small">Weekly scoring rank 1 receives 9 all-play wins, equal to 1.00 expected head-to-head win. All-play points are divided by 9 each week.</p></div>')
-    parts += ['<h2>Who ate?</h2><p class="small">Fantasy points scored, ranked with actual matchup outcome (W/L).</p><div class="card">']
-    for rid in rank:
-        parts += [f'<div class="line"><span class="name">#{rank.index(rid)+1} {esc(rid)}</span><span class="track"><span class="bar" style="width:{100*current[rid]/max_score:.1f}%"></span></span><span class="value">{fmt(current[rid])}</span></div>']
-    parts += ['</div><h2>The record is lying</h2><p class="small">Who is thriving and who keeps getting robbed?</p><div class="card">']
-    for rid in season_rank:
-        parts += [f'<div class="line"><span class="name">{esc(rid)}</span><span class="track"><span class="bar" style="width:{100*totals[rid]/max_season:.1f}%"></span></span><span class="value">{wins[rid]}-{losses[rid]}</span></div>']
-    parts += ['</div><h2>Schedule justice</h2><p class="small">Expected wins = weekly all-play wins divided by league opponents, summed through the current week.</p><div class="card"><table><thead><tr><th>Manager</th><th>Expected W</th><th>Actual W</th><th>Luck</th></tr></thead><tbody>']
-    for rid in rank:
-        parts += [f'<tr><td>{esc(rid)}</td><td>{expected_wins[rid]:.2f}</td><td>{wins[rid]}</td><td>{wins[rid]-expected_wins[rid]:+.2f}</td></tr>']
+        xx,yy=sx(tick),sy(tick)
+        parts.append(f'<line x1="{xx:.1f}" x2="{xx:.1f}" y1="57" y2="452" stroke="#35415b"/><line x1="55" x2="540" y1="{yy:.1f}" y2="{yy:.1f}" stroke="#35415b"/><text x="{xx:.1f}" y="477" fill="#a9b4c8" font-size="12" text-anchor="middle">{tick}</text><text x="41" y="{yy+4:.1f}" fill="#a9b4c8" font-size="12" text-anchor="end">{tick}</text>')
+    parts.append('<line x1="55" y1="452" x2="540" y2="57" stroke="#d1d6df" stroke-width="2" stroke-dasharray="5 5"/><text x="300" y="505" fill="#a9b4c8" font-size="12" text-anchor="middle">EXPECTED WINS</text><text x="16" y="255" fill="#a9b4c8" font-size="12" text-anchor="middle" transform="rotate(-90 16 255)">ACTUAL WINS</text>')
+    for i,rid in enumerate(luck_order,1):
+        color='#ffc85c' if i==1 else '#b49cff' if i==len(luck_order) else '#69b1ff'
+        x,y=sx(expected_wins[rid]),sy(wins[rid])
+        parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="12" fill="{color}" stroke="#0b1020" stroke-width="2"><title>#{i} {esc(rid)}</title></circle><text x="{x:.1f}" y="{y+4:.1f}" fill="#0b1020" text-anchor="middle" font-weight="900" font-size="11">{i}</text>')
+    parts += ['</svg><p class="small">Gold = luckiest · Purple = unluckiest · Blue = everyone else. Dot numbers match the table below.</p></div>',
+              '<div class="card" style="overflow-x:auto"><table><thead><tr><th>Rank</th><th>Manager</th><th>Expected wins</th><th>Actual wins</th><th>Luck</th></tr></thead><tbody>']
+    for i,rid in enumerate(luck_order,1):
+        bg='background:rgba(255,200,92,.14);' if i==1 else 'background:rgba(180,156,255,.17);' if i==len(luck_order) else ''
+        parts.append(f'<tr style="{bg}"><td>#{i}</td><td>{esc(rid)}</td><td>{expected_wins[rid]:.2f}</td><td>{wins[rid]}</td><td>{wins[rid]-expected_wins[rid]:+.2f}</td></tr>')
     parts += ['</tbody></table></div>']
     # A snapshot must explicitly match the completed report week; never show stale NFL stats.
     snapshot_path = Path('data') / f'nfl_week_2026_{latest}.json'
