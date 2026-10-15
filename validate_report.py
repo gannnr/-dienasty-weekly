@@ -15,12 +15,14 @@ checks = {
     "weekly all-play": "All-Play Record" in page,
     "removed redundant standings": "The record is lying" not in page,
     "lucky dawg rank columns": all(text in page for text in ["Expected wins","Actual wins","Luck"]),
-    "weekly awards": "Weekly hardware" in page,
+    "weekly awardz": "Weekly Awardz" in page,
+    "ten award cards": page.count("data-award-id=") == 10,
+    "retired redundant sections": "Weekly hardware" not in page and "The league is cooked" not in page,
     "correct league": "1312113845380083712" in page,
     "expected wins math": "expected_wins[rid]" in source,
     "valid HTML": page.strip().endswith("</html>"),
 }
-match = re.search(r"WEEK\\s+(\\d+)<br>IS UNWELL", page)
+match = re.search(r"WEEK\s+(\d+)<br>IS UNWELL", page)
 if match:
     snapshot = Path("data") / ("nfl_week_2026_" + match.group(1) + ".json")
     checks["NFL Reality Check section"] = "NFL reality check" in page
