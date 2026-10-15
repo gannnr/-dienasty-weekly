@@ -61,12 +61,16 @@ def build():
         raise ValueError("No safely completed week found; preserving existing site")
     latest = max(completed)
     totals = defaultdict(float)
+    expected_wins = defaultdict(float)
     wins = defaultdict(int)
     losses = defaultdict(int)
     weekly_wins = {}
     for week in sorted(score_by_week):
         games = score_by_week[week]
         paired = defaultdict(list)
+        week_scores = {int(g["roster_id"]):float(g["points"]) for g in games}
+        for rid,score in week_scores.items():
+            expected_wins[rid] += sum(score > other for other_rid,other in week_scores.items() if other_rid != rid)/(len(week_scores)-1)
         for g in games:
             rid = int(g["roster_id"])
             totals[rid] += float(g["points"])
@@ -83,12 +87,27 @@ def build():
                 weekly_wins[ra] = (rb,pa,pb)
                 weekly_wins[rb] = (ra,pb,pa)
     current = {int(g["roster_id"]):float(g["points"]) for g in score_by_week[latest]}
+    names_by_player = {}
+    try:
+        raw_players = api("/players/nfl")
+        names_by_player = {pid: p.get("full_name") or (p.get("first_name","") + " " + p.get("last_name","")).strip() for pid,p in raw_players.items()}
+    except Exception as error:
+        print("Player-name lookup unavailable:", error)
+    def best_ball_text(rid):
+        game = next(g for g in score_by_week[latest] if int(g["roster_id"]) == rid)
+        points = game.get("players_points") or {}
+        active = game.get("starters") or []
+        leaders = sorted(((float(points.get(pid) or 0), pid) for pid in active if pid and pid != "0"),reverse=True)[:3]
+        return ", ".join(f"{safe(names_by_player.get(pid) or pid)} {fmt(score)}" for score,pid in leaders) or "Not available"
+
     rank = sorted(expected,key=lambda r:(-current[r],-totals[r]))
     allplay = {rid:sum(current[rid]>current[other] for other in expected if other!=rid) for rid in expected}
     most = rank[0]
     least = rank[-1]
     ordered = sorted(expected, key=lambda r: (-wins[r], -totals[r]))
     season_rank = sorted(expected, key=lambda r: -totals[r])
+    lucky_team = max(expected,key=lambda r: wins[r]-expected_wins[r])
+    cursed_team = min(expected,key=lambda r: wins[r]-expected_wins[r])
     max_score = max(current.values())
     max_season = max(totals.values())
     games = [(rid, *weekly_wins[rid]) for rid in expected if rid < weekly_wins[rid][0]]
@@ -120,10 +139,12 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}
         return f'<div class="card"><span class="label">{safe(tag)}</span><h3>{safe(title)}</h3><p>{body}</p></div>'
     parts = ['<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DieNasty — Week '+str(latest)+'</title>',style,'</head><body><main>']
     now = datetime.now(ZoneInfo("America/Chicago")).strftime("%B %d, %Y at %I:%M %p CT")
-    parts += [f'<div class="eyebrow">DIENASTY 4 LYFE · CURRENT WEEK</div><h1>WEEK {latest}<br>JUST DROPPED.</h1>',
+    parts += [f'<div class="eyebrow">DIENASTY 4 LYFE · THE WEEKLY DAMAGE REPORT</div><h1>WEEK {latest}<br>IS UNWELL.</h1>',
               f'<p class="intro">Best ball. League receipts, matchup chaos, and actual math to back up the slander.</p><p class="small">Updated {safe(now)} · Verified Sleeper results</p>']
     parts += ['<section>',card(f'{teams[most].strip()} chose violence',f'<span class="big">{fmt(current[most])} points.</span> Weekly high score, {allplay[most]}-{len(expected)-1-allplay[most]} in all-play, and a fresh invoice for everyone below them.','MAIN CHARACTER'),'</section>']
-    parts += ['<h2>League-wide brainrot</h2><p class="small">The storylines before you scroll to your own team.</p><div class="two">']
+    parts += ['<h2>The league is cooked</h2><p class="small">The storylines before you scroll to your own team.</p><div class="two">']
+    parts += [card("Schedule merchant supremacy",f'{esc(lucky_team)} has {wins[lucky_team]} actual wins versus {expected_wins[lucky_team]:.2f} scoring-deserved wins. The schedule has diplomatic immunity.','SCHEDULE MERCHANT')]
+    parts += [card("The shadow realm",f'{esc(cursed_team)} has {wins[cursed_team]} actual wins versus {expected_wins[cursed_team]:.2f} expected. The universe is posting ragebait.','CURSED')]
     parts += [card("The scoreboard has a new landlord",f'{esc(most)} dropped {fmt(current[most])} and finished first of {len(expected)} teams this week.','WEEKLY FINAL BOSS')]
     parts += [card("Maximum schedule pain",f'{esc(unlucky)} scored {fmt(current[unlucky])} but still lost {fmt(weekly_wins[unlucky][1])}–{fmt(weekly_wins[unlucky][2])}. The algorithm is doing stand-up comedy.','CURSED') if unlucky is not None else card("No schedule victims", "Nobody posted a loss from the top end of the scoreboard this time.","WEEKLY CHAOS")]
     parts += [card("The photo finish",f'{esc(close[0])} and {esc(close[1])} finished {fmt(close[2])}–{fmt(close[3])}. Margin: {fmt(abs(close[2]-close[3]))} points. The group chat should investigate.','CLOSEST MATCH')]
@@ -154,16 +175,16 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}
         parts += [f'<details class="card"><summary><span class="record">{record}</span><span class="manager">{esc(rid)}</span><span class="pill {"good" if result=="WIN" else "bad"}">{result} · {fmt(own)}</span></summary>',
             f'<div class="facts"><div class="fact"><span>WEEK {latest} POINTS</span><b>{fmt(own)}</b></div><div class="fact"><span>WEEKLY RANK</span><b>#{placement} / {n}</b></div><div class="fact"><span>ALL-PLAY THIS WEEK</span><b>{ap}-{n-1-ap}</b></div><div class="fact"><span>SEASON POINTS</span><b>{fmt(totals[rid])}</b></div></div>',
             f'<p><strong>Match:</strong> {esc(rid)} {"beat" if result=="WIN" else "lost to" if result=="LOSS" else "tied"} {esc(opponent)}, {fmt(own)}–{fmt(opp)}. {match_story}</p>',
-            f'<p><strong>Season vibe:</strong> #{season_place} in total points with a {record} record. {season_story}</p></details>']
-    parts += ['<h2>Weekly scoring ladder</h2><p class="small">Actual Sleeper fantasy points, descending.</p><div class="card">']
+            f'<p><strong>Season vibe:</strong> #{season_place} in total points with a {record} record. {season_story} Scoring-deserved wins: {expected_wins[rid]:.2f}; actual: {wins[rid]}.</p><p><strong>Top automatic best-ball scorers:</strong> {best_ball_text(rid)}</p></details>']
+    parts += ['<h2>Who ate?</h2><p class="small">Actual Sleeper fantasy points, descending.</p><div class="card">']
     for rid in rank:
         parts += [f'<div class="line"><span class="name">{esc(rid)}</span><span class="track"><span class="bar" style="width:{100*current[rid]/max_score:.1f}%"></span></span><span class="value">{fmt(current[rid])}</span></div>']
-    parts += ['</div><h2>Season points vs. record</h2><p class="small">Who is thriving and who keeps getting robbed?</p><div class="card">']
+    parts += ['</div><h2>The record is lying</h2><p class="small">Who is thriving and who keeps getting robbed?</p><div class="card">']
     for rid in season_rank:
         parts += [f'<div class="line"><span class="name">{esc(rid)}</span><span class="track"><span class="bar" style="width:{100*totals[rid]/max_season:.1f}%"></span></span><span class="value">{wins[rid]}-{losses[rid]}</span></div>']
-    parts += ['</div><h2>Schedule justice</h2><p class="small">Weekly all-play records, independent of assigned opponents.</p><div class="card"><table><thead><tr><th>Manager</th><th>Week rank</th><th>All-play</th><th>Outcome</th></tr></thead><tbody>']
+    parts += ['</div><h2>Schedule justice</h2><p class="small">Expected wins = weekly all-play wins divided by league opponents, summed through the current week.</p><div class="card"><table><thead><tr><th>Manager</th><th>Expected W</th><th>Actual W</th><th>Luck</th></tr></thead><tbody>']
     for rid in rank:
-        parts += [f'<tr><td>{esc(rid)}</td><td>#{rank.index(rid)+1}</td><td>{allplay[rid]}-{len(expected)-1-allplay[rid]}</td><td>{"W" if weekly_wins[rid][1]>weekly_wins[rid][2] else "L"}</td></tr>']
+        parts += [f'<tr><td>{esc(rid)}</td><td>{expected_wins[rid]:.2f}</td><td>{wins[rid]}</td><td>{wins[rid]-expected_wins[rid]:+.2f}</td></tr>']
     parts += ['</tbody></table></div><h2>Weekly hardware</h2><div class="two">',
         card("Offensive war crime", f'{esc(most)} posted {fmt(current[most])} and won the scoring crown.','💣 HIGH SCORE'),
         card("Basement certified", f'{esc(least)} recorded {fmt(current[least])}. This week is going in the evidence locker.','💀 CURSED'),
