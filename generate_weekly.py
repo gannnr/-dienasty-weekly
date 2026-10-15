@@ -2,6 +2,7 @@
 """Build DieNasty's latest completed weekly recap from the public Sleeper API."""
 import html
 import json
+from pathlib import Path
 import os
 import sys
 import urllib.request
@@ -205,6 +206,23 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}
     parts += ['</div><h2>Schedule justice</h2><p class="small">Expected wins = weekly all-play wins divided by league opponents, summed through the current week.</p><div class="card"><table><thead><tr><th>Manager</th><th>Expected W</th><th>Actual W</th><th>Luck</th></tr></thead><tbody>']
     for rid in rank:
         parts += [f'<tr><td>{esc(rid)}</td><td>{expected_wins[rid]:.2f}</td><td>{wins[rid]}</td><td>{wins[rid]-expected_wins[rid]:+.2f}</td></tr>']
+    # A snapshot must explicitly match the completed report week; never show stale NFL stats.
+    snapshot_path = Path('data') / f'nfl_week_2026_{latest}.json'
+    if snapshot_path.is_file():
+        snapshot = json.loads(snapshot_path.read_text(encoding='utf-8'))
+        if snapshot.get('season') != 2026 or snapshot.get('week') != latest:
+            raise ValueError('NFL snapshot season/week mismatch')
+        entries = snapshot.get('players') or []
+        if len(entries) != 3: raise ValueError('NFL reality check requires exactly three verified player entries')
+        parts += ['<h2>NFL reality check</h2><p class="small">Exactly three player eruptions. Real NFL opportunities, not estimated workloads.</p>']
+        for entry in entries:
+            metrics=entry.get('metrics') or []
+            if len(metrics) != 4 or not entry.get('name') or not entry.get('story'):
+                raise ValueError('NFL reality-check snapshot is missing required metrics')
+            metrics_html=''.join(f'<div class="fact"><span>{safe(label)}</span><b>{safe(value)}</b></div>' for label,value in metrics)
+            parts.append(f'<div class="card"><span class="label">{safe(entry.get("label","NFL REALITY"))}</span><h3>{safe(entry["name"])}</h3><p class="small">{safe(entry.get("team",""))} vs {safe(entry.get("opponent",""))}</p><div class="facts">{metrics_html}</div><p>{safe(entry["story"])}</p></div>')
+    else:
+        parts += ['<h2>NFL reality check</h2><div class="card"><p>Advanced NFL player-game stats are awaiting verification for this week. We do not recycle last week\'s numbers.</p></div>']
     parts += ['</tbody></table></div><h2>Weekly hardware</h2><div class="two">',
         card("Offensive war crime", f'{esc(most)} posted {fmt(current[most])} and won the scoring crown.','💣 HIGH SCORE'),
         card("Basement certified", f'{esc(least)} recorded {fmt(current[least])}. This week is going in the evidence locker.','💀 CURSED'),
