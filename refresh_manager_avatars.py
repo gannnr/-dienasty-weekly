@@ -1,4 +1,4 @@
-"""Refresh Sleeper manager portraits annually, without touching weekly data."""
+"""Snapshot Sleeper portraits every September 8 for all weekly recaps."""
 import json
 import urllib.request
 from pathlib import Path
