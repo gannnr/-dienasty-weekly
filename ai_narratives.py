@@ -49,7 +49,7 @@ def generate(week, facts):
       "\"next_episode\":string}]}. Exactly one entry for each supplied roster ID."
     )
     payload={"model":MODEL,"instructions":guide,
-             "input":json.dumps({"season":2026,"week":week,"facts":facts,"recent_narratives":history},ensure_ascii=False),
+             "input":"Return JSON only. Verified facts and narrative history: "+json.dumps({"season":2026,"week":week,"facts":facts,"recent_narratives":history},ensure_ascii=False),
              "text":{"format":{"type":"json_object"}},
              "max_output_tokens":8000}
     req=urllib.request.Request(
