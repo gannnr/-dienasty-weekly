@@ -30,6 +30,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Validate generator syntax
+        run: python -m py_compile generate_weekly.py
       - name: Generate report from finalized Sleeper scores
         run: python generate_weekly.py
       - name: Publish updated website if content changed
