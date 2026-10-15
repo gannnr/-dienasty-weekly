@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'generate_weekly.py'
+      - 'ai_narratives.py'
   schedule:
     - cron: '0 8 * * 2'
       timezone: 'America/Chicago'
@@ -31,14 +32,17 @@ jobs:
         with:
           python-version: '3.12'
       - name: Validate generator syntax
-        run: python -m py_compile generate_weekly.py
+        run: python -m py_compile generate_weekly.py ai_narratives.py
       - name: Generate report from finalized Sleeper scores
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          DIENASTY_AI_MODEL: gpt-6.1-sol
         run: python generate_weekly.py
       - name: Validate generated report quality
         run: python validate_report.py
       - name: Publish updated website if content changed
         run: |
-          git add index.html week-5.html data/awardz/
+          git add index.html week-5.html data/awardz/ data/narratives/
           if git diff --cached --quiet; then
             echo "No content change"
             exit 0
