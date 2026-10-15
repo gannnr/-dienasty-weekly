@@ -237,6 +237,8 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}
         if found and int(found.group(1)) > latest:
             raise ValueError("Existing report newer than generated week")
     with open(destination,"w",encoding="utf-8") as handle: handle.write(content)
+    if latest == 5:
+        Path("week-5.html").write_text(content,encoding="utf-8")
     archive = Path('data')/'awardz'/f'2026_{latest}.json'
     archive.parent.mkdir(parents=True,exist_ok=True)
     archive.write_text(json.dumps({'season':2026,'week':latest,'awards':awardz},indent=2)+'\n',encoding='utf-8')
