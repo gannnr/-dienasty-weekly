@@ -1,5 +1,6 @@
 """Validate DieNasty's generated report before GitHub Pages publication."""
 from pathlib import Path
+import json
 import re
 import sys
 
@@ -17,6 +18,13 @@ checks = {
     "expected wins math": "expected_wins[rid]" in source,
     "valid HTML": page.strip().endswith("</html>"),
 }
+match = re.search(r"WEEK\\s+(\\d+)<br>IS UNWELL", page)
+if match:
+    snapshot = Path("data") / ("nfl_week_2026_" + match.group(1) + ".json")
+    checks["NFL Reality Check section"] = "NFL reality check" in page
+    if snapshot.exists():
+        data=json.loads(snapshot.read_text(encoding="utf-8"))
+        checks["three verified NFL player cards"] = all(player["name"] in page for player in data["players"]) and len(data["players"]) == 3
 for check, passed in checks.items():
     print(("PASS" if passed else "FAIL") + " " + check)
 if not all(checks.values()):
