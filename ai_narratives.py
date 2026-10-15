@@ -44,7 +44,7 @@ def generate(week, facts):
       "injuries, or opponents. You may use only facts in the supplied fact sheets. "
       "No percentages or derived metrics unless in those sheets. "
       "The next episode section should be speculative, not assert future results. "
-      "Respond with a JSON object: {\"managers\":[{\"roster_id\":number,"
+      "Respond with valid JSON only. Return a JSON object: {\"managers\":[{\"roster_id\":number,"
       "\"headline\":string,\"film_room\":string,\"bigger_conspiracy\":string,"
       "\"next_episode\":string}]}. Exactly one entry for each supplied roster ID."
     )
