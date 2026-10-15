@@ -30,6 +30,7 @@ def build():
     league = api("/league/" + LEAGUE_ID)
     if str(league.get("season")) != "2026":
         raise ValueError("Unexpected league season; refusing to publish")
+    league_avatar = league.get('avatar')
     users = api("/league/" + LEAGUE_ID + "/users")
     rosters = api("/league/" + LEAGUE_ID + "/rosters")
     state = api("/state/nfl")
@@ -141,14 +142,15 @@ details summary{cursor:pointer;list-style:none;display:flex;align-items:center;j
 .line{display:flex;align-items:center;gap:8px;margin:10px 0}.line .name{width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:800}.line .value{width:74px;text-align:right;font-size:11px}
 table{border-collapse:collapse;width:100%;font-size:12px}th{text-align:left;color:var(--muted)}td,th{border-bottom:1px solid var(--line);padding:10px 5px}td:last-child,th:last-child{text-align:right}
 footer{color:var(--muted);font-size:12px;margin-top:36px}\n.manager-avatar{width:42px;height:42px;object-fit:cover;border-radius:50%;vertical-align:middle;border:2px solid #69b1ff;margin-right:8px;flex-shrink:0}.manager{font-size:12px;line-height:1.1;min-width:0;flex:1;overflow-wrap:anywhere;display:flex;align-items:center}.record{min-width:58px}.pill{flex-shrink:0;font-size:10px}.award-heading{display:flex;align-items:center;gap:12px;margin-bottom:12px}.award-icon{width:56px;height:56px;object-fit:contain;flex-shrink:0}.award-heading .label{font-size:11px}.award-recipient{display:flex;align-items:center;gap:7px;overflow-wrap:anywhere}.nfl-player-header{display:flex;align-items:center;gap:13px;margin:12px 0}.nfl-headshot{width:76px;height:76px;object-fit:contain;background:#28354e;border-radius:16px;border:2px solid #69b1ff}
-</style>"""
+@media(max-width:500px){.league-logo{width:72px;height:72px}}.hero-title{display:flex;align-items:center;gap:16px}.hero-title h1{min-width:0}.league-logo{width:92px;height:92px;object-fit:cover;border-radius:20px;flex-shrink:0;border:2px solid #b49cff;background:#19213a}</style>"""
     def esc(r):
         return safe(teams[r].strip())
     def card(title, body, tag="LEAGUE RECEIPTS"):
         return f'<div class="card"><span class="label">{safe(tag)}</span><h3>{safe(title)}</h3><p>{body}</p></div>'
     parts = ['<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DieNasty — Week '+str(latest)+'</title>',style,'</head><body><main>']
     now = datetime.now(ZoneInfo("America/Chicago")).strftime("%B %d, %Y at %I:%M %p CT")
-    parts += [f'<div class="eyebrow">DIENASTY 4 LYFE · THE WEEKLY DAMAGE REPORT</div><h1>WEEK {latest}<br>IS UNWELL.</h1>',
+    logo = ('<img class="league-logo" src="https://sleepercdn.com/avatars/'+safe(league_avatar)+'" alt="DieNasty league logo">') if league_avatar else ''
+    parts += [f'<div class="eyebrow">DIENASTY 4 LYFE · THE WEEKLY DAMAGE REPORT</div><div class="hero-title">{logo}<h1>WEEK {latest}<br>IS UNWELL.</h1></div>',
               f'<p class="intro">Best ball. League receipts, matchup chaos, and actual math to back up the slander.</p><p class="small">Updated {safe(now)} · Verified Sleeper results</p>']
     parts += ['<section>',card(f'{teams[most].strip()} chose violence',f'{photo(most)} <span class="big">{fmt(current[most])} points.</span> Weekly high score, {allplay[most]}-{len(expected)-1-allplay[most]} in all-play, and a fresh invoice for everyone below them.','MAIN CHARACTER'),'</section>']
     weekly_history = {wk:{int(g["roster_id"]):float(g["points"]) for g in games} for wk,games in score_by_week.items()}
