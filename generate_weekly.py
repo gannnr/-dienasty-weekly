@@ -149,7 +149,7 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}\n.manager-avatar{width
         return f'<div class="card"><span class="label">{safe(tag)}</span><h3>{safe(title)}</h3><p>{body}</p></div>'
     parts = ['<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DieNasty — Week '+str(latest)+'</title>',style,'</head><body><main>']
     now = datetime.now(ZoneInfo("America/Chicago")).strftime("%B %d, %Y at %I:%M %p CT")
-    logo = ('<img class="league-logo" src="https://sleepercdn.com/avatars/'+safe(league_avatar)+'" alt="DieNasty league logo">') if league_avatar else ''
+    logo = ('<img class="league-logo" src="assets/league-logo.png" alt="DieNasty league logo">') if league_avatar else ''
     parts += [f'<div class="eyebrow">DIENASTY 4 LYFE · THE WEEKLY DAMAGE REPORT</div><div class="hero-title">{logo}<h1>WEEK {latest}<br>IS UNWELL.</h1></div>',
               f'<p class="intro">Best ball. League receipts, matchup chaos, and actual math to back up the slander.</p><p class="small">Updated {safe(now)} · Verified Sleeper results</p>']
     parts += ['<section>',card(f'{teams[most].strip()} chose violence',f'{photo(most)} <span class="big">{fmt(current[most])} points.</span> Weekly high score, {allplay[most]}-{len(expected)-1-allplay[most]} in all-play, and a fresh invoice for everyone below them.','MAIN CHARACTER'),'</section>']
