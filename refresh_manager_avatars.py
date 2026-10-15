@@ -20,7 +20,7 @@ for user in users:
     uid=str(user["user_id"])
     aid=user.get("avatar")
     if not aid:
-        continue
+        raise RuntimeError('Sleeper manager '+uid+' has no avatar; annual refresh cannot be completed')
     img,content_type=get("https://sleepercdn.com/avatars/"+str(aid))
     if not content_type.lower().startswith("image/") or len(img)<200:
         raise RuntimeError("Invalid image for Sleeper manager "+uid)
