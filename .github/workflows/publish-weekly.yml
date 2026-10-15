@@ -42,6 +42,7 @@ jobs:
         run: python validate_report.py
       - name: Publish updated website if content changed
         run: |
+          mkdir -p data/narratives
           git add index.html week-5.html data/awardz/ data/narratives/
           if git diff --cached --quiet; then
             echo "No content change"
