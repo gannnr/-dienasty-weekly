@@ -290,3 +290,5 @@ if __name__=="__main__":
         sys.exit(1)
 
 # Rebuild trigger: publish refreshed Awardz badges, compact manager cards and NFL headshots.
+
+# Trigger supervised Week 5 AI integration test; safe fallback remains enabled.
