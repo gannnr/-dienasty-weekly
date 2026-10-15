@@ -124,9 +124,13 @@ def assign(week,teams,scores,matchups,season_wins,expected_wins,season_points,we
 
 def render(awards, avatars=None):
     sections=['<h2>🏆 Weekly Awardz</h2><p class="small">Ten managers. Ten different trophies. Data-backed chaos, most dramatic first.</p><div class="two">']
-    for a in awards:
-        url=(avatars or {}).get(a["roster_id"])
-        portrait=('<img class="manager-avatar" src="'+html.escape(url,quote=True)+'" alt="Manager avatar">') if url else ''
-        sections.append('<div class="card" data-award-id="'+html.escape(a["award_id"])+'" data-manager-id="'+str(a["roster_id"] )+'"><span class="label">'+html.escape(a["emoji"]+" "+a["award"])+'</span><h3>'+portrait+html.escape(a["name"])+'</h3><p>'+a["evidence"]+'</p></div>')
+    for item in awards:
+        uid=str(item["roster_id"])
+        url=(avatars or {}).get(item["roster_id"])
+        avatar=('<img class="manager-avatar" src="'+html.escape(url,quote=True)+'" alt="">') if url else ''
+        award_id=html.escape(item["award_id"],quote=True)
+        title=html.escape(item["award"])
+        icon='<img class="award-icon" src="assets/awardz/'+award_id+'.svg" alt="" loading="lazy">'
+        sections.append('<div class="card" data-award-id="'+award_id+'" data-manager-id="'+uid+'"><div class="award-heading">'+icon+'<span class="label">'+title+'</span></div><h3 class="award-recipient">'+avatar+html.escape(item["name"])+'</h3><p>'+html.escape(item["evidence"])+'</p></div>')
     sections.append('</div>')
     return ''.join(sections)
