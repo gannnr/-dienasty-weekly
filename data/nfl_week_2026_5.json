@@ -1,0 +1,85 @@
+{
+  "season": 2026,
+  "week": 5,
+  "source": "Sleeper Fantasy Data Hub / nfl_player_game joined to nfl_players, checked 2026-10-15",
+  "players": [
+    {
+      "name": "Puka Nacua",
+      "team": "LA",
+      "opponent": "BUF",
+      "kind": "receiving",
+      "label": "THE TARGET VACUUM",
+      "metrics": [
+        [
+          "TARGETS",
+          24
+        ],
+        [
+          "RECEPTIONS",
+          17
+        ],
+        [
+          "REC YARDS",
+          138
+        ],
+        [
+          "CARRIES",
+          2
+        ]
+      ],
+      "story": "Twenty-four targets and seventeen receptions. The offense was addressed to Puka's house."
+    },
+    {
+      "name": "Jahmyr Gibbs",
+      "team": "DET",
+      "opponent": "ARI",
+      "kind": "rushing",
+      "label": "WORKLOAD LANDLORD",
+      "metrics": [
+        [
+          "CARRIES",
+          25
+        ],
+        [
+          "TARGETS",
+          6
+        ],
+        [
+          "RUSH YARDS",
+          151
+        ],
+        [
+          "RUSH TD",
+          2
+        ]
+      ],
+      "story": "Twenty-five rushes and six targets. Two rushing touchdowns turned a giant workload into a fantasy eruption."
+    },
+    {
+      "name": "Drake Maye",
+      "team": "NE",
+      "opponent": "LV",
+      "kind": "passing",
+      "label": "FIVE-TD APOCALYPSE",
+      "metrics": [
+        [
+          "PASS ATTEMPTS",
+          34
+        ],
+        [
+          "COMPLETIONS",
+          26
+        ],
+        [
+          "PASS YARDS",
+          374
+        ],
+        [
+          "TOTAL TD",
+          5
+        ]
+      ],
+      "story": "Four passing touchdowns plus one rushing score. Maye put up 374 passing yards and carried Connecticut's weekly comeback."
+    }
+  ]
+}
