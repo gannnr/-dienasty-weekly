@@ -228,7 +228,7 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}
             parts.append(f'<div class="card"><span class="label">{safe(entry.get("label","NFL REALITY"))}</span><h3>{safe(entry["name"])}</h3><p class="small">{safe(entry.get("team",""))} vs {safe(entry.get("opponent",""))}</p><div class="facts">{metrics_html}</div><p>{safe(entry["story"])}</p></div>')
     else:
         parts += ['<h2>NFL reality check</h2><div class="card"><p>Advanced NFL player-game stats are awaiting verification for this week. We do not recycle last week\'s numbers.</p></div>']
-    parts += ['</tbody></table></div><h2>Weekly hardware</h2><div class="two">',
+    parts += ['<h2>Weekly hardware</h2><div class="two">',
         card("Offensive war crime", f'{esc(most)} posted {fmt(current[most])} and won the scoring crown.','💣 HIGH SCORE'),
         card("Basement certified", f'{esc(least)} recorded {fmt(current[least])}. This week is going in the evidence locker.','💀 CURSED'),
         card("Margin of terror", f'{esc(biggest[0])} vs. {esc(biggest[1])} was decided by {fmt(abs(biggest[2]-biggest[3]))} points.','🚨 BLOWOUT')]
