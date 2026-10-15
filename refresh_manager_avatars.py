@@ -43,3 +43,5 @@ if logo_id:
 Path("data").mkdir(exist_ok=True)
 Path("data/manager_avatars.json").write_text(json.dumps(manifest,indent=2)+"\n",encoding="utf-8")
 print("Downloaded and verified",len(manifest),"local Sleeper profile images")
+
+# Refresh trigger for local league branding.
