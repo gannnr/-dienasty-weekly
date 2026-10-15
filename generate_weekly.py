@@ -38,6 +38,11 @@ def build():
     names = {u["user_id"]: u.get("metadata", {}).get("team_name") or u.get("display_name") or "Unknown" for u in users}
     teams = {int(r["roster_id"]): names.get(r.get("owner_id"), "Roster " + str(r["roster_id"])) for r in rosters}
     expected = set(teams)
+    avatar_file = Path('data/manager_avatars.json')
+    avatars = json.loads(avatar_file.read_text()) if avatar_file.exists() else {}
+    def photo(rid):
+        url = avatars.get(str(next((r.get('owner_id') for r in rosters if int(r['roster_id'])==rid),'')))
+        return '<img class="manager-avatar" src="'+safe(url)+'" alt="Manager avatar">' if url else ''
     completed = []
     score_by_week = {}
     for week in range(1, max_week + 1):
