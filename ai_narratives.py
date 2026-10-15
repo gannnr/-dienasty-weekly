@@ -8,7 +8,7 @@ import re
 import urllib.request
 from pathlib import Path
 
-MODEL=os.environ.get("DIENASTY_AI_MODEL","gpt-6.1-sol")
+MODEL=os.environ.get("DIENASTY_AI_MODEL","gpt-5-mini")
 WORD_MIN=130
 WORD_MAX=180
 
