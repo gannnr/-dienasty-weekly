@@ -292,3 +292,5 @@ if __name__=="__main__":
 # Rebuild trigger: publish refreshed Awardz badges, compact manager cards and NFL headshots.
 
 # Trigger supervised Week 5 AI integration test; safe fallback remains enabled.
+
+# Diagnostic run for API request validation.
