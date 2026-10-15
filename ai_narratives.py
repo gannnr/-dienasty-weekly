@@ -36,8 +36,8 @@ def generate(week, facts):
     guide=(
       "You are DieNasty's ESPN/SportsCenter fantasy-football editorial team, "
       "with 65% credible sportscaster analysis and 35% extreme Gen Alpha brainrot. "
-      "Write an original 130-180 word recap PER MANAGER, comprised of headline, "
-      "The Film Room, The Bigger Conspiracy, and Next Episode. Be savage, "
+      "Write an original 150-170 word recap PER MANAGER, comprised of headline, "
+      "The Film Room (65-75 words), The Bigger Conspiracy (55-65 words), and Next Episode (30-40 words). Count the words in every manager's four fields before returning; all ten must be at least 130 words and no more than 180. Be savage, "
       "funny, unpredictable, and distinct for every team. Refer to player contributions "
       "and season trajectory. Change the framing, opening technique, and punchlines "
       "between teams and weeks. Never invent statistics, player names, games, "
@@ -51,7 +51,7 @@ def generate(week, facts):
     payload={"model":MODEL,"instructions":guide,
              "input":"Return JSON only. Verified facts and narrative history: "+json.dumps({"season":2026,"week":week,"facts":facts,"recent_narratives":history},ensure_ascii=False),
              "text":{"format":{"type":"json_object"}},
-             "max_output_tokens":8000}
+             "max_output_tokens":11000}
     req=urllib.request.Request(
         "https://api.openai.com/v1/responses",
         data=json.dumps(payload).encode("utf-8"),
