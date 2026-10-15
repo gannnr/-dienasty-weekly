@@ -64,6 +64,8 @@ def generate(week, facts):
         if not output:
             output="".join(part.get("text","") for item in result.get("output",[]) for part in item.get("content",[]) if part.get("type")=="output_text")
         narratives=json.loads(output)
+        if isinstance(narratives,dict) and isinstance(narratives.get("managers"),list):
+            print("AI candidate count:",len(narratives["managers"]),"word counts:",[_words(" ".join(str(x.get(k,"")) for k in ("headline","film_room","bigger_conspiracy","next_episode"))) for x in narratives["managers"] if isinstance(x,dict)])
         if not validate(narratives,facts):
             raise ValueError("AI prose failed structural or factual safeguards")
     except Exception as error:
