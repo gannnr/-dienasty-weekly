@@ -109,6 +109,8 @@ def build():
     lucky_team = max(expected,key=lambda r: wins[r]-expected_wins[r])
     cursed_team = min(expected,key=lambda r: wins[r]-expected_wins[r])
     max_score = max(current.values())
+    if len(expected) != 10 or len(score_by_week[latest]) != 10:
+        raise ValueError('Expected ten DieNasty teams; retaining published report')
     max_season = max(totals.values())
     games = [(rid, *weekly_wins[rid]) for rid in expected if rid < weekly_wins[rid][0]]
     close = min(games, key=lambda g: abs(g[2] - g[3]))
