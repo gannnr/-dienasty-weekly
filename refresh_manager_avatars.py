@@ -30,6 +30,16 @@ for user in users:
     manifest[uid]="assets/manager-avatars/"+filename
 if len(manifest)!=10:
     raise RuntimeError("Only "+str(len(manifest))+" profile images available; keeping prior snapshot")
+# Save league branding locally so the hero does not rely on remote CDN rendering.
+league_raw,_=get("https://api.sleeper.app/v1/league/"+LEAGUE_ID)
+league=json.loads(league_raw)
+logo_id=league.get("avatar")
+if logo_id:
+    logo,mime=get("https://sleepercdn.com/avatars/"+str(logo_id))
+    if not mime.lower().startswith("image/") or len(logo)<200:
+        raise RuntimeError("Sleeper league logo response was not an image")
+    Path("assets").mkdir(exist_ok=True)
+    Path("assets/league-logo.png").write_bytes(logo)
 Path("data").mkdir(exist_ok=True)
 Path("data/manager_avatars.json").write_text(json.dumps(manifest,indent=2)+"\n",encoding="utf-8")
 print("Downloaded and verified",len(manifest),"local Sleeper profile images")
