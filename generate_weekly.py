@@ -3,6 +3,7 @@
 import html
 import json
 from pathlib import Path
+from weekly_awardz import assign as assign_awardz, render as render_awardz
 import os
 import sys
 import urllib.request
@@ -145,14 +146,12 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}
     parts += [f'<div class="eyebrow">DIENASTY 4 LYFE · THE WEEKLY DAMAGE REPORT</div><h1>WEEK {latest}<br>IS UNWELL.</h1>',
               f'<p class="intro">Best ball. League receipts, matchup chaos, and actual math to back up the slander.</p><p class="small">Updated {safe(now)} · Verified Sleeper results</p>']
     parts += ['<section>',card(f'{teams[most].strip()} chose violence',f'<span class="big">{fmt(current[most])} points.</span> Weekly high score, {allplay[most]}-{len(expected)-1-allplay[most]} in all-play, and a fresh invoice for everyone below them.','MAIN CHARACTER'),'</section>']
-    parts += ['<h2>The league is cooked</h2><p class="small">The storylines before you scroll to your own team.</p><div class="two">']
-    parts += [card("Schedule merchant supremacy",f'{esc(lucky_team)} has {wins[lucky_team]} actual wins versus {expected_wins[lucky_team]:.2f} scoring-deserved wins. The schedule has diplomatic immunity.','SCHEDULE MERCHANT')]
-    parts += [card("The shadow realm",f'{esc(cursed_team)} has {wins[cursed_team]} actual wins versus {expected_wins[cursed_team]:.2f} expected. The universe is posting ragebait.','CURSED')]
-    parts += [card("The scoreboard has a new landlord",f'{esc(most)} dropped {fmt(current[most])} and finished first of {len(expected)} teams this week.','WEEKLY FINAL BOSS')]
-    parts += [card("Maximum schedule pain",f'{esc(unlucky)} scored {fmt(current[unlucky])} but still lost {fmt(weekly_wins[unlucky][1])}–{fmt(weekly_wins[unlucky][2])}. The algorithm is doing stand-up comedy.','CURSED') if unlucky is not None else card("No schedule victims", "Nobody posted a loss from the top end of the scoreboard this time.","WEEKLY CHAOS")]
-    parts += [card("The photo finish",f'{esc(close[0])} and {esc(close[1])} finished {fmt(close[2])}–{fmt(close[3])}. Margin: {fmt(abs(close[2]-close[3]))} points. The group chat should investigate.','CLOSEST MATCH')]
-    parts += [card("The week was not equally distributed",f'{esc(biggest[0])} versus {esc(biggest[1])}: {fmt(biggest[2])}–{fmt(biggest[3])}. That is a {fmt(abs(biggest[2]-biggest[3]))}-point difference.','BIGGEST BLOWOUT')]
-    parts += ['</div><h2>State of every bro</h2><p class="small">Tap your team. Scoreboard first, full receipts underneath.</p>']
+    weekly_history = {wk:{int(g["roster_id"]):float(g["points"]) for g in games} for wk,games in score_by_week.items()}
+    lineups = {int(g["roster_id"]):[(pid,float((g.get("players_points") or {}).get(pid) or 0)) for pid in (g.get("starters") or []) if pid and pid != "0"] for g in score_by_week[latest]}
+    positions = {pid:entry.get("position") for pid,entry in (raw_players.items() if "raw_players" in locals() else [])}
+    awardz = assign_awardz(latest,teams,current,weekly_wins,wins,expected_wins,totals,weekly_history,lineups,names_by_player,positions)
+    parts.append(render_awardz(awardz))
+    parts += ['<h2>State of every bro</h2><p class="small">Tap your team. Scoreboard first, full receipts underneath.</p>']
     for rid in ordered:
         opponent, own, opp = weekly_wins[rid]
         result = "WIN" if own>opp else ("LOSS" if own<opp else "TIE")
@@ -226,15 +225,7 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}
             parts.append(f'<div class="card"><span class="label">{safe(entry.get("label","NFL REALITY"))}</span><h3>{safe(entry["name"])}</h3><p class="small">{safe(entry.get("team",""))} vs {safe(entry.get("opponent",""))}</p><div class="facts">{metrics_html}</div><p>{safe(entry["story"])}</p></div>')
     else:
         parts += ['<h2>NFL reality check</h2><div class="card"><p>Advanced NFL player-game stats are awaiting verification for this week. We do not recycle last week\'s numbers.</p></div>']
-    parts += ['<h2>Weekly hardware</h2><div class="two">',
-        card("Offensive war crime", f'{esc(most)} posted {fmt(current[most])} and won the scoring crown.','💣 HIGH SCORE'),
-        card("Basement certified", f'{esc(least)} recorded {fmt(current[least])}. This week is going in the evidence locker.','💀 CURSED'),
-        card("Margin of terror", f'{esc(biggest[0])} vs. {esc(biggest[1])} was decided by {fmt(abs(biggest[2]-biggest[3]))} points.','🚨 BLOWOUT')]
-    if unlucky is not None:
-        parts += [card("Schedule pain",f'{esc(unlucky)} put up {fmt(current[unlucky])} and still caught an L.','🧂 ROBBED')]
-    if lucky is not None:
-        parts += [card("Schedule privilege",f'{esc(lucky)} won with {fmt(current[lucky])} despite being #{rank.index(lucky)+1} in scoring.','🎰 LUCKY')]
-    parts += ['</div><h2>Next week\'s propaganda</h2>',
+    parts += ['<h2>Next week\'s propaganda</h2>',
         card("The receipts do not expire",f'{esc(most)} has the weekly crown, {esc(least)} needs a bounce-back, and the remaining managers have seven days to manufacture excuses.','LOOKING AHEAD'),
         f'<footer>Updated {safe(now)} · Sleeper league {LEAGUE_ID} · Completed Week {latest}. Scores, standings and all-play computed from actual Sleeper matchups. NFL player opportunity data is omitted unless independently verified — no fake carries, targets or projections.</footer></main></body></html>']
     destination = "index.html"
@@ -246,6 +237,9 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}
         if found and int(found.group(1)) > latest:
             raise ValueError("Existing report newer than generated week")
     with open(destination,"w",encoding="utf-8") as handle: handle.write(content)
+    archive = Path('data')/'awardz'/f'2026_{latest}.json'
+    archive.parent.mkdir(parents=True,exist_ok=True)
+    archive.write_text(json.dumps({'season':2026,'week':latest,'awards':awardz},indent=2)+'\n',encoding='utf-8')
     print(f"Successfully generated DieNasty Week {latest}, {len(expected)} managers")
 
 if __name__=="__main__":
