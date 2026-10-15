@@ -250,4 +250,4 @@ if __name__=="__main__":
         print("SAFE FAILURE (existing page unchanged):",error,file=sys.stderr)
         sys.exit(1)
 
-# Rebuild trigger: publish upgraded weekly page immediately.
+# Rebuild trigger: publish Weekly Awardz to both main site and immutable Week 5 archive.
