@@ -1,0 +1,43 @@
+name: Refresh DieNasty manager avatars
+
+on:
+  schedule:
+    - cron: '0 8 8 9 *'
+      timezone: 'America/Chicago'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - refresh_manager_avatars.py
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dienasty-weekly-publish
+  cancel-in-progress: false
+
+jobs:
+  avatars:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch annual Sleeper portraits
+        run: python refresh_manager_avatars.py
+      - name: Regenerate report using cached portraits
+        run: |
+          python -m py_compile generate_weekly.py weekly_awardz.py
+          python generate_weekly.py
+          python validate_report.py
+      - name: Commit snapshot and refreshed report
+        run: |
+          git add data/manager_avatars.json index.html week-5.html data/awardz/
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Refresh annual Sleeper manager portraits'
+          git push
