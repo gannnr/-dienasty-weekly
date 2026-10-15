@@ -194,18 +194,23 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}
     for rid in sorted(expected):
         luck = wins[rid] - expected_wins[rid]
         color = '#ffc85c' if luck > 1 else '#b49cff' if luck < -1 else '#69b1ff'
-        plot.append(f'<circle cx="{sx(expected_wins[rid]):.1f}" cy="{sy(wins[rid]):.1f}" r="9" fill="{color}" stroke="#0b1020" stroke-width="2"><title>{esc(rid)}: expected {expected_wins[rid]:.2f}, actual {wins[rid]}, difference {luck:+.2f}</title></circle>')
+        plot.append(f'<circle cx="{sx(expected_wins[rid]):.1f}" cy="{sy(wins[rid]):.1f}" r="12" fill="{color}" stroke="#0b1020" stroke-width="2"><title>#{ordered.index(rid)+1} {esc(rid)}: {expected_wins[rid]:.2f} expected vs {wins[rid]} actual</title></circle><text x="{sx(expected_wins[rid]):.1f}" y="{sy(wins[rid])+4:.1f}" font-size="11" font-weight="900" text-anchor="middle" fill="#0b1020">{ordered.index(rid)+1}</text>')
     plot.append('</svg><p class="small">Gold = lucky by more than one win; purple = cursed by more than one; blue = roughly fair.</p></div>')
     parts += plot
-    parts += ['<h2>Who ate?</h2><p class="small">Actual Sleeper fantasy points, descending.</p><div class="card">']
+    parts.append('<div class="card"><h3>Manager dot legend</h3><p class="small">Each dot number corresponds to a manager.</p>')
+    for rid in ordered:
+        parts.append(f'<p>#{ordered.index(rid)+1} <strong>{esc(rid)}</strong> · Actual {wins[rid]} · Expected {expected_wins[rid]:.2f} · Luck {wins[rid]-expected_wins[rid]:+.2f}</p>')
+    parts.append('<p class="small">Weekly scoring rank 1 receives 9 all-play wins, equal to 1.00 expected head-to-head win. All-play points are divided by 9 each week.</p></div>')
+    parts += ['<h2>Who ate?</h2><p class="small">Fantasy points scored, ranked with actual matchup outcome (W/L).</p><div class="card">']
     for rid in rank:
-        parts += [f'<div class="line"><span class="name">{esc(rid)}</span><span class="track"><span class="bar" style="width:{100*current[rid]/max_score:.1f}%"></span></span><span class="value">{fmt(current[rid])}</span></div>']
+        parts += [f'<div class="line"><span class="name">#{rank.index(rid)+1} {esc(rid)}</span><span class="track"><span class="bar" style="width:{100*current[rid]/max_score:.1f}%"></span></span><span class="value">{fmt(current[rid])}</span></div>']
     parts += ['</div><h2>The record is lying</h2><p class="small">Who is thriving and who keeps getting robbed?</p><div class="card">']
     for rid in season_rank:
         parts += [f'<div class="line"><span class="name">{esc(rid)}</span><span class="track"><span class="bar" style="width:{100*totals[rid]/max_season:.1f}%"></span></span><span class="value">{wins[rid]}-{losses[rid]}</span></div>']
     parts += ['</div><h2>Schedule justice</h2><p class="small">Expected wins = weekly all-play wins divided by league opponents, summed through the current week.</p><div class="card"><table><thead><tr><th>Manager</th><th>Expected W</th><th>Actual W</th><th>Luck</th></tr></thead><tbody>']
     for rid in rank:
         parts += [f'<tr><td>{esc(rid)}</td><td>{expected_wins[rid]:.2f}</td><td>{wins[rid]}</td><td>{wins[rid]-expected_wins[rid]:+.2f}</td></tr>']
+    parts += ['</tbody></table></div>']
     # A snapshot must explicitly match the completed report week; never show stale NFL stats.
     snapshot_path = Path('data') / f'nfl_week_2026_{latest}.json'
     if snapshot_path.is_file():
