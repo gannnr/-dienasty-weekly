@@ -140,7 +140,7 @@ details summary{cursor:pointer;list-style:none;display:flex;align-items:center;j
 .track{height:11px;background:#303a50;border-radius:10px;overflow:hidden;flex:1}.bar{display:block;height:100%;background:linear-gradient(90deg,#69b1ff,#32d3c4);border-radius:10px}
 .line{display:flex;align-items:center;gap:8px;margin:10px 0}.line .name{width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:800}.line .value{width:74px;text-align:right;font-size:11px}
 table{border-collapse:collapse;width:100%;font-size:12px}th{text-align:left;color:var(--muted)}td,th{border-bottom:1px solid var(--line);padding:10px 5px}td:last-child,th:last-child{text-align:right}
-footer{color:var(--muted);font-size:12px;margin-top:36px}
+footer{color:var(--muted);font-size:12px;margin-top:36px}\n.manager-avatar{width:42px;height:42px;object-fit:cover;border-radius:50%;vertical-align:middle;border:2px solid #69b1ff;margin-right:8px}
 </style>"""
     def esc(r):
         return safe(teams[r].strip())
@@ -150,12 +150,12 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}
     now = datetime.now(ZoneInfo("America/Chicago")).strftime("%B %d, %Y at %I:%M %p CT")
     parts += [f'<div class="eyebrow">DIENASTY 4 LYFE · THE WEEKLY DAMAGE REPORT</div><h1>WEEK {latest}<br>IS UNWELL.</h1>',
               f'<p class="intro">Best ball. League receipts, matchup chaos, and actual math to back up the slander.</p><p class="small">Updated {safe(now)} · Verified Sleeper results</p>']
-    parts += ['<section>',card(f'{teams[most].strip()} chose violence',f'<span class="big">{fmt(current[most])} points.</span> Weekly high score, {allplay[most]}-{len(expected)-1-allplay[most]} in all-play, and a fresh invoice for everyone below them.','MAIN CHARACTER'),'</section>']
+    parts += ['<section>',card(f'{teams[most].strip()} chose violence',f'{photo(most)} <span class="big">{fmt(current[most])} points.</span> Weekly high score, {allplay[most]}-{len(expected)-1-allplay[most]} in all-play, and a fresh invoice for everyone below them.','MAIN CHARACTER'),'</section>']
     weekly_history = {wk:{int(g["roster_id"]):float(g["points"]) for g in games} for wk,games in score_by_week.items()}
     lineups = {int(g["roster_id"]):[(pid,float((g.get("players_points") or {}).get(pid) or 0)) for pid in (g.get("starters") or []) if pid and pid != "0"] for g in score_by_week[latest]}
     positions = {pid:entry.get("position") for pid,entry in (raw_players.items() if "raw_players" in locals() else [])}
     awardz = assign_awardz(latest,teams,current,weekly_wins,wins,expected_wins,totals,weekly_history,lineups,names_by_player,positions)
-    parts.append(render_awardz(awardz))
+    parts.append(render_awardz(awardz, {int(r['roster_id']):avatars.get(str(r.get('owner_id'))) for r in rosters}))
     parts += ['<h2>State of every bro</h2><p class="small">Tap your team. Scoreboard first, full receipts underneath.</p>']
     for rid in ordered:
         opponent, own, opp = weekly_wins[rid]
@@ -182,7 +182,7 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}
         leaders = best_ball_text(rid)
         if leaders != 'Not available':
             match_story += ' Top lineup contributors: ' + leaders + '.'
-        parts += [f'<details class="card"><summary><span class="record">{record}</span><span class="manager">{esc(rid)}</span><span class="pill {"good" if result=="WIN" else "bad"}">{result} · {fmt(own)}</span></summary>',
+        parts += [f'<details class="card"><summary><span class="record">{record}</span><span class="manager">{photo(rid)} {esc(rid)}</span><span class="pill {"good" if result=="WIN" else "bad"}">{result} · {fmt(own)}</span></summary>',
             f'<div class="facts"><div class="fact"><span>WEEK {latest} POINTS</span><b>{fmt(own)}</b></div><div class="fact"><span>WEEKLY RANK</span><b>#{placement} / {n}</b></div><div class="fact"><span>ALL-PLAY THIS WEEK</span><b>{ap}-{n-1-ap}</b></div><div class="fact"><span>SEASON POINTS</span><b>{fmt(totals[rid])}</b></div></div>',
             f'<p><strong>Match:</strong> {esc(rid)} {"beat" if result=="WIN" else "lost to" if result=="LOSS" else "tied"} {esc(opponent)}, {fmt(own)}–{fmt(opp)}. {match_story}</p>',
             f'<p><strong>Season vibe:</strong> #{season_place} in total points with a {record} record. {season_story} Scoring-deserved wins: {expected_wins[rid]:.2f}; actual: {wins[rid]}.</p><p><strong>Top automatic best-ball scorers:</strong> {best_ball_text(rid)}</p></details>']
