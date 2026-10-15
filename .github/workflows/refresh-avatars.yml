@@ -35,7 +35,7 @@ jobs:
           python validate_report.py
       - name: Commit snapshot and refreshed report
         run: |
-          git add data/manager_avatars.json index.html week-5.html data/awardz/
+          git add data/manager_avatars.json assets/manager-avatars/ index.html week-5.html data/awardz/
           if git diff --cached --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
