@@ -4,6 +4,7 @@ import html
 import json
 from pathlib import Path
 from weekly_awardz import assign as assign_awardz, render as render_awardz
+from ai_narratives import generate as generate_ai_narratives
 import os
 import sys
 import urllib.request
@@ -159,6 +160,24 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}\n.manager-avatar{width
     awardz = assign_awardz(latest,teams,current,weekly_wins,wins,expected_wins,totals,weekly_history,lineups,names_by_player,positions)
     parts.append(render_awardz(awardz, {int(r['roster_id']):avatars.get(str(r.get('owner_id'))) for r in rosters}))
     parts += ['<h2>State of every bro</h2><p class="small">Tap your team. Scoreboard first, full receipts underneath.</p>']
+    facts=[]
+    for fid in ordered:
+        foe, own_score, foe_score = weekly_wins[fid]
+        facts.append({
+            "roster_id":fid,"manager":teams[fid],"season":2026,"week":latest,
+            "result":"WIN" if own_score>foe_score else "LOSS" if own_score<foe_score else "TIE",
+            "opponent":teams[foe] if isinstance(foe,int) and foe in teams else str(foe),
+            "weekly_points":fmt(own_score),"opponent_points":fmt(foe_score),
+            "weekly_rank":rank.index(fid)+1,"weekly_allplay_wins":allplay[fid],
+            "weekly_allplay_losses":len(expected)-1-allplay[fid],
+            "season_record":f"{wins[fid]}-{losses[fid]}",
+            "season_total_points":fmt(totals[fid]),
+            "season_points_rank":season_rank.index(fid)+1,
+            "scoring_deserved_wins":f"{expected_wins[fid]:.2f}",
+            "actual_wins":wins[fid],"top_best_ball_contributors":best_ball_text(fid)
+        })
+    ai_narratives=generate_ai_narratives(latest,facts)
+    ai_by_id={item["roster_id"]:item for item in ai_narratives["managers"]} if ai_narratives else {}
     for rid in ordered:
         opponent, own, opp = weekly_wins[rid]
         result = "WIN" if own>opp else ("LOSS" if own<opp else "TIE")
@@ -184,10 +203,21 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}\n.manager-avatar{width
         leaders = best_ball_text(rid)
         if leaders != 'Not available':
             match_story += ' Top lineup contributors: ' + leaders + '.'
+        if rid in ai_by_id:
+            narrative=ai_by_id[rid]
+            story_html=(
+                '<h3 class="story-headline">'+safe(narrative["headline"])+'</h3>'
+                +'<p><strong>THE FILM ROOM</strong> '+safe(narrative["film_room"])+'</p>'
+                +'<p><strong>THE BIGGER CONSPIRACY</strong> '+safe(narrative["bigger_conspiracy"])+'</p>'
+                +'<p><strong>NEXT EPISODE</strong> '+safe(narrative["next_episode"])+'</p>'
+            )
+        else:
+            story_html=(f'<p><strong>Match:</strong> {esc(rid)} {"beat" if result=="WIN" else "lost to" if result=="LOSS" else "tied"} {esc(opponent)}, {fmt(own)}–{fmt(opp)}. {match_story}</p>'
+                +f'<p><strong>Season vibe:</strong> #{season_place} in total points with a {record} record. {season_story} Scoring-deserved wins: {expected_wins[rid]:.2f}; actual: {wins[rid]}.</p>')
         parts += [f'<details class="card"><summary><span class="record">{record}</span><span class="manager">{photo(rid)} {esc(rid)}</span><span class="pill {"good" if result=="WIN" else "bad"}">{result} · {fmt(own)}</span></summary>',
             f'<div class="facts"><div class="fact"><span>WEEK {latest} POINTS</span><b>{fmt(own)}</b></div><div class="fact"><span>WEEKLY RANK</span><b>#{placement} / {n}</b></div><div class="fact"><span>ALL-PLAY THIS WEEK</span><b>{ap}-{n-1-ap}</b></div><div class="fact"><span>SEASON POINTS</span><b>{fmt(totals[rid])}</b></div></div>',
-            f'<p><strong>Match:</strong> {esc(rid)} {"beat" if result=="WIN" else "lost to" if result=="LOSS" else "tied"} {esc(opponent)}, {fmt(own)}–{fmt(opp)}. {match_story}</p>',
-            f'<p><strong>Season vibe:</strong> #{season_place} in total points with a {record} record. {season_story} Scoring-deserved wins: {expected_wins[rid]:.2f}; actual: {wins[rid]}.</p><p><strong>Top automatic best-ball scorers:</strong> {best_ball_text(rid)}</p></details>']
+            story_html,
+            f'<p><strong>Top automatic best-ball scorers:</strong> {best_ball_text(rid)}</p></details>']
     # Week-by-week all-play record, directly after the manager cards.
     parts += [f'<h2>Week {latest} All-Play Record</h2><p class="small">How many of the other nine teams each manager outscored this week. This is NOT the head-to-head record.</p><div class="card"><table><thead><tr><th>Rank</th><th>Manager</th><th>All-play</th><th>Week pts</th></tr></thead><tbody>']
     for i,rid in enumerate(rank,1):
