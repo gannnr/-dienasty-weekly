@@ -172,10 +172,28 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}
         else:
             season_story=f'This was a #{placement} weekly score, while your season-long points rank is #{season_place}.'
         record=f'{wins[rid]}-{losses[rid]}'
+        leaders = best_ball_text(rid)
+        if leaders != 'Not available':
+            match_story += ' Top lineup contributors: ' + leaders + '.'
         parts += [f'<details class="card"><summary><span class="record">{record}</span><span class="manager">{esc(rid)}</span><span class="pill {"good" if result=="WIN" else "bad"}">{result} · {fmt(own)}</span></summary>',
             f'<div class="facts"><div class="fact"><span>WEEK {latest} POINTS</span><b>{fmt(own)}</b></div><div class="fact"><span>WEEKLY RANK</span><b>#{placement} / {n}</b></div><div class="fact"><span>ALL-PLAY THIS WEEK</span><b>{ap}-{n-1-ap}</b></div><div class="fact"><span>SEASON POINTS</span><b>{fmt(totals[rid])}</b></div></div>',
             f'<p><strong>Match:</strong> {esc(rid)} {"beat" if result=="WIN" else "lost to" if result=="LOSS" else "tied"} {esc(opponent)}, {fmt(own)}–{fmt(opp)}. {match_story}</p>',
             f'<p><strong>Season vibe:</strong> #{season_place} in total points with a {record} record. {season_story} Scoring-deserved wins: {expected_wins[rid]:.2f}; actual: {wins[rid]}.</p><p><strong>Top automatic best-ball scorers:</strong> {best_ball_text(rid)}</p></details>']
+    # Accessible, dependency-free scatter plot of schedule luck.
+    upper = max(1, latest)
+    def sx(value): return 55 + 485 * value / upper
+    def sy(value): return 452 - 395 * value / upper
+    plot = ['<h2>Schedule justice chart</h2><p class="small">Scoring-deserved wins on the horizontal axis; actual wins vertically. The diagonal represents fair treatment.</p><div class="card"><svg viewBox="0 0 600 515" role="img" aria-label="Expected wins versus actual wins scatter chart" style="width:100%;height:auto">']
+    for tick in range(upper+1):
+        px,py = sx(tick),sy(tick)
+        plot.append(f'<line x1="{px:.1f}" x2="{px:.1f}" y1="57" y2="452" stroke="#35415b"/><line x1="55" x2="540" y1="{py:.1f}" y2="{py:.1f}" stroke="#35415b"/><text x="{px:.1f}" y="477" fill="#a9b4c8" font-size="12" text-anchor="middle">{tick}</text><text x="41" y="{py+4:.1f}" fill="#a9b4c8" font-size="12" text-anchor="end">{tick}</text>')
+    plot.append('<line x1="55" y1="452" x2="540" y2="57" stroke="#d1d6df" stroke-width="2" stroke-dasharray="5 5"/><text x="300" y="505" fill="#a9b4c8" font-size="12" text-anchor="middle">EXPECTED WINS</text><text x="16" y="255" fill="#a9b4c8" font-size="12" text-anchor="middle" transform="rotate(-90 16 255)">ACTUAL WINS</text>')
+    for rid in sorted(expected):
+        luck = wins[rid] - expected_wins[rid]
+        color = '#ffc85c' if luck > 1 else '#b49cff' if luck < -1 else '#69b1ff'
+        plot.append(f'<circle cx="{sx(expected_wins[rid]):.1f}" cy="{sy(wins[rid]):.1f}" r="9" fill="{color}" stroke="#0b1020" stroke-width="2"><title>{esc(rid)}: expected {expected_wins[rid]:.2f}, actual {wins[rid]}, difference {luck:+.2f}</title></circle>')
+    plot.append('</svg><p class="small">Gold = lucky by more than one win; purple = cursed by more than one; blue = roughly fair.</p></div>')
+    parts += plot
     parts += ['<h2>Who ate?</h2><p class="small">Actual Sleeper fantasy points, descending.</p><div class="card">']
     for rid in rank:
         parts += [f'<div class="line"><span class="name">{esc(rid)}</span><span class="track"><span class="bar" style="width:{100*current[rid]/max_score:.1f}%"></span></span><span class="value">{fmt(current[rid])}</span></div>']
