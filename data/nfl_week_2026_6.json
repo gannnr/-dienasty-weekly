@@ -1,0 +1,88 @@
+{
+  "season": 2026,
+  "week": 6,
+  "source": "Verified Supabase nfl_player_game joined to nfl_players 2026-10-20",
+  "players": [
+    {
+      "name": "Malik Nabers",
+      "team": "NYG",
+      "opponent": "NO",
+      "kind": "receiving",
+      "label": "THE TARGET VACUUM",
+      "metrics": [
+        [
+          "TARGETS",
+          15
+        ],
+        [
+          "RECEPTIONS",
+          12
+        ],
+        [
+          "REC YARDS",
+          165
+        ],
+        [
+          "REC TD",
+          0
+        ]
+      ],
+      "story": "Fifteen targets, twelve receptions, and 165 yards. Nabers turned every route into a personal petition for the football.",
+      "espn_id": "4595348"
+    },
+    {
+      "name": "Christian McCaffrey",
+      "team": "SF",
+      "opponent": "WAS",
+      "kind": "rushing",
+      "label": "THE WORKLOAD MONOPOLY",
+      "metrics": [
+        [
+          "CARRIES",
+          16
+        ],
+        [
+          "TARGETS",
+          10
+        ],
+        [
+          "RECEPTIONS",
+          9
+        ],
+        [
+          "RUSH TD",
+          2
+        ]
+      ],
+      "story": "Sixteen carries and ten targets with two rushing scores. McCaffrey remained the entire offensive department.",
+      "espn_id": "3117251"
+    },
+    {
+      "name": "Trevor Lawrence",
+      "team": "JAX",
+      "opponent": "HOU",
+      "kind": "passing",
+      "label": "FOUR-TD AIR RAID",
+      "metrics": [
+        [
+          "PASS ATTEMPTS",
+          41
+        ],
+        [
+          "COMPLETIONS",
+          24
+        ],
+        [
+          "PASS YARDS",
+          306
+        ],
+        [
+          "PASS TD",
+          4
+        ]
+      ],
+      "story": "Four passing touchdowns and 306 yards on 41 attempts. Lawrence turned volume into a four-score air campaign.",
+      "espn_id": "4360310"
+    }
+  ]
+}
