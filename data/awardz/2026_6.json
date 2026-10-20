@@ -1,0 +1,96 @@
+{
+  "season": 2026,
+  "week": 6,
+  "awards": [
+    {
+      "roster_id": 5,
+      "name": "4whoresman",
+      "award_id": "execution",
+      "award": "Public Execution",
+      "emoji": "\ud83e\ude93",
+      "strength": 100.0,
+      "evidence": "Won by 37.57. The opponent has been placed in witness protection."
+    },
+    {
+      "roster_id": 3,
+      "name": "Connecticut Cheddarwurst",
+      "award_id": "fall",
+      "award": "Fall From Grace",
+      "emoji": "\ud83d\udcc9",
+      "strength": 100.0,
+      "evidence": "Fell from #2 to #7. The wheels left the group chat."
+    },
+    {
+      "roster_id": 7,
+      "name": "Krispy Kremepie",
+      "award_id": "merchant",
+      "award": "Schedule Merchant",
+      "emoji": "\ud83c\udfb0",
+      "strength": 100.0,
+      "evidence": "Won despite ranking #9 in points. The schedule is their franchise QB."
+    },
+    {
+      "roster_id": 6,
+      "name": "Lamar hit it, Cam came",
+      "award_id": "depth",
+      "award": "Depth Merchant",
+      "emoji": "\ud83e\udde0",
+      "strength": 100.0,
+      "evidence": "54% of points came from outside the top three. Actual bench-industrial complex."
+    },
+    {
+      "roster_id": 1,
+      "name": "StinkyButt69",
+      "award_id": "carry",
+      "award": "One-Man Carry Job",
+      "emoji": "\ud83d\ude80",
+      "strength": 100.0,
+      "evidence": "Top scorer contributed 25% of team points. Everybody else rode shotgun."
+    },
+    {
+      "roster_id": 10,
+      "name": "The fighting greeks",
+      "award_id": "spikes",
+      "award": "Spike Week Demon",
+      "emoji": "\ud83c\udf86",
+      "strength": 100.0,
+      "evidence": "4 counted players reached 20+ points. Slot-machine simulator activated."
+    },
+    {
+      "roster_id": 4,
+      "name": "Wes Mantooth",
+      "award_id": "stinker",
+      "award": "Generational Stinker",
+      "emoji": "\ud83d\uddd1\ufe0f",
+      "strength": 100.0,
+      "evidence": "Scored 113.45. The offense has been reported missing."
+    },
+    {
+      "roster_id": 9,
+      "name": "bingbongtinydong",
+      "award_id": "revival",
+      "award": "Back From the Dead",
+      "emoji": "\ud83e\udddf",
+      "strength": 100.0,
+      "evidence": "Jumped from #9 to #5 in scoring. Lazarus got the Wi-Fi password."
+    },
+    {
+      "roster_id": 8,
+      "name": "docjoff",
+      "award_id": "brick",
+      "award": "Brick Squad",
+      "emoji": "\ud83e\uddf1",
+      "strength": 100.0,
+      "evidence": "Top three produced 57.10 points. Stars on airplane mode."
+    },
+    {
+      "roster_id": 2,
+      "name": "The Chavenators",
+      "award_id": "nuke",
+      "award": "Nuclear Warhead",
+      "emoji": "\ud83d\udca3",
+      "strength": 87.88,
+      "evidence": "167.15 points. The scoreboard just filed a workers comp claim."
+    }
+  ]
+}
