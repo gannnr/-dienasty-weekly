@@ -6,6 +6,7 @@ on:
     paths:
       - 'generate_weekly.py'
       - 'ai_narratives.py'
+      - 'build_nfl_reality.py'
   schedule:
     # GitHub Actions cron uses UTC; timezone keys are unsupported.
     # Tuesday: 08:00/11:00 CST, 09:00/12:00 CDT.
@@ -34,7 +35,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Validate generator syntax
-        run: python -m py_compile generate_weekly.py ai_narratives.py
+        run: python -m py_compile generate_weekly.py ai_narratives.py build_nfl_reality.py
       - name: Generate report from finalized Sleeper scores
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -45,7 +46,7 @@ jobs:
       - name: Publish updated website if content changed
         run: |
           mkdir -p data/narratives
-          git add index.html week-5.html data/awardz/ data/narratives/
+          git add index.html week-5.html data/awardz/ data/narratives/ data/nfl_week_2026_*.json
           if git diff --cached --quiet; then
             echo "No content change"
             exit 0
