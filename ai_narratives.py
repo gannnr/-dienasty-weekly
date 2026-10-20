@@ -160,3 +160,5 @@ def validate(data,facts):
         if "<" in prose or ">" in prose:
             return False
     return True
+
+# Concurrent-writer integration verification.
