@@ -39,12 +39,12 @@ def fit_length(item, fact=None):
     def total():
         return _words(" ".join(str(item.get(k,"")) for k in ("headline",)+fields))
     if fact:
-        allowed=set(re.findall(r"\\d+(?:\\.\\d+)?",json.dumps(fact)))
+        allowed=set(re.findall(r"\d+(?:\\.\\d+)?",json.dumps(fact)))
         for key in fields:
-            sentences=re.split(r"(?<=[.!?])\\s+(?=[A-Z0-9])",item[key])
+            sentences=re.split(r"(?<=[.!?])\s+(?=[A-Z0-9])",item[key])
             clean=[]
             for sentence in sentences:
-                nums=re.findall(r"(?<!\\w)\\d+(?:\\.\\d+)?",sentence)
+                nums=re.findall(r"(?<!\w)\\d+(?:\\.\\d+)?",sentence)
                 unknown=[n for n in nums if len(n)>=2 and n not in allowed]
                 if unknown:
                     print("Removing unsupported numerical claim for",fact["roster_id"],"values:",unknown)
@@ -57,7 +57,7 @@ def fit_length(item, fact=None):
         if len(words)>maximum:
             cut=" ".join(words[:maximum])
             # Prefer a complete sentence near the cap; otherwise close cleanly.
-            marks=[m.end() for m in re.finditer(r"[.!?](?=\\s|$)",cut)]
+            marks=[m.end() for m in re.finditer(r"[.!?](?=\s|$)",cut)]
             if marks and marks[-1]>=len(cut)*0.72:
                 cut=cut[:marks[-1]]
             elif not cut.endswith((".","!","?")):
