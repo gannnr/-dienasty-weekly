@@ -209,7 +209,11 @@ def validate(data,facts):
         # Reject ungrounded multi-digit figures; single-digit numbers may be rhetorical.
         allowed_numbers=set(re.findall(r"\d+(?:\.\d+)?",json.dumps(allowed[item["roster_id"]])))
         numbers=re.findall(r"(?<!\w)\d+(?:\.\d+)?",prose)
-        if any(number not in allowed_numbers and len(number)>=2 for number in numbers):
+        unknown=[number for number in numbers if len(number)>=2 and not any(
+            abs(float(number)-float(allowed_value))<0.005
+            for allowed_value in allowed_numbers)]
+        if unknown:
+            print("Manager",item["roster_id"],"unverified figures:",unknown)
             return False
         if "<" in prose or ">" in prose:
             return False
