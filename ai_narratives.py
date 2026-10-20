@@ -52,25 +52,27 @@ def fit_length(item, fact=None):
                     clean.append(sentence)
             if clean:
                 item[key]=" ".join(clean)
+    # Retain complete sentences only; never manufacture a period after a cut-off clause.
     for key,maximum in (("film_room",82),("bigger_conspiracy",72),("next_episode",42)):
-        words=str(item.get(key,"")).split()
-        if len(words)>maximum:
-            cut=" ".join(words[:maximum])
-            # Prefer a complete sentence near the cap; otherwise close cleanly.
-            marks=[m.end() for m in re.finditer(r"[.!?](?=\s|$)",cut)]
-            if marks and marks[-1]>=len(cut)*0.72:
-                cut=cut[:marks[-1]]
-            elif not cut.endswith((".","!","?")):
-                cut=cut.rstrip(",;:")+". "
-            item[key]=cut
-    while total()>WORD_MAX:
-        key=max(("film_room","bigger_conspiracy"),key=lambda k:_words(item[k]))
-        words=item[key].split()
-        if len(words)<=34:
-            break
-        cut=" ".join(words[:-8]).rstrip(",;:")
-        item[key]=cut if cut.endswith((".","!","?")) else cut+"."
+        value=str(item.get(key,"")).strip()
+        if _words(value)>maximum:
+            sentences=re.split(r"(?<=[.!?])\s+(?=[A-Z0-9])",value)
+            kept=[]
+            for sentence in sentences:
+                if _words(" ".join(kept+[sentence]))>maximum:
+                    break
+                kept.append(sentence)
+            if kept:
+                item[key]=" ".join(kept)
+    if total()>WORD_MAX:
+        for key in ("film_room","bigger_conspiracy"):
+            sentences=re.split(r"(?<=[.!?])\s+(?=[A-Z0-9])",item[key])
+            if total()<=WORD_MAX:
+                break
+            if len(sentences)>1:
+                item[key]=" ".join(sentences[:-1])
     return item
+
 
 VOICES=("SportsCenter meltdown","First Take argument","30 for 30 documentary","Film-room analyst","Postgame press conference","League group-chat correspondent","Mock financial analyst","Emergency broadcast","Championship committee","Sports radio caller")
 BANNED_PHRASES=("satirical federal probe","league integrity committee","aura farming","npc allegation","schedule_luck_wins","weekly_allplay_wins","scoring_deserved_wins","season_total_points","season_points_rank","counted_best_ball","top_three_share_pct","weekly_matchup_margin","film room smells")
@@ -81,8 +83,10 @@ def editorial_issues(item,fact):
     issues=[]
     for phrase in BANNED_PHRASES+BEST_BALL_BAD_ADVICE:
         if phrase in lower: issues.append("banned phrase: "+phrase)
-    if any(str(item.get(k,"")).rstrip().endswith("…") for k in ("film_room","bigger_conspiracy","next_episode")):
-        issues.append("truncated sentence")
+    for k in ("film_room","bigger_conspiracy","next_episode"):
+        ending=str(item.get(k,"")).rstrip()
+        if not ending.endswith((".","!","?")) or ending.endswith("…"):
+            issues.append("incomplete ending: "+k)
     players=[p["name"].lower() for p in fact.get("counted_best_ball",{}).get("top_five",[]) if p.get("name")]
     if sum(name in lower for name in players)<2: issues.append("fewer than two counted players")
     return issues
