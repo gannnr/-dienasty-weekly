@@ -102,6 +102,22 @@ def build():
         names_by_player = {pid: p.get("full_name") or (p.get("first_name","") + " " + p.get("last_name","")).strip() for pid,p in raw_players.items()}
     except Exception as error:
         print("Player-name lookup unavailable:", error)
+    player_meta = raw_players if isinstance(locals().get("raw_players"),dict) else {}
+    def detailed_best_ball(rid):
+        game=next(g for g in score_by_week[latest] if int(g["roster_id"])==rid)
+        points=game.get("players_points") or {}
+        ids=[pid for pid in (game.get("starters") or []) if pid and pid!="0"]
+        ranked=sorted(ids,key=lambda pid:float(points.get(pid) or 0),reverse=True)
+        leaders=[]
+        position_points={}
+        for pid in ranked:
+            p=player_meta.get(pid) or {}
+            pos=p.get("position") or "UNKNOWN"
+            score=round(float(points.get(pid) or 0),2)
+            position_points[pos]=round(position_points.get(pos,0)+score,2)
+            leaders.append({"name":names_by_player.get(pid) or str(pid),"position":pos,"points":score})
+        return {"top_five":leaders[:5],"position_points":position_points,
+                "top_three_share_pct":round(100*sum(x["points"] for x in leaders[:3])/current[rid],1) if current[rid] else None}
     def best_ball_text(rid):
         game = next(g for g in score_by_week[latest] if int(g["roster_id"]) == rid)
         points = game.get("players_points") or {}
@@ -174,7 +190,11 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}\n.manager-avatar{width
             "season_total_points":fmt(totals[fid]),
             "season_points_rank":season_rank.index(fid)+1,
             "scoring_deserved_wins":f"{expected_wins[fid]:.2f}",
-            "actual_wins":wins[fid],"top_best_ball_contributors":best_ball_text(fid)
+            "actual_wins":wins[fid],"top_best_ball_contributors":best_ball_text(fid),
+            "counted_best_ball":detailed_best_ball(fid),
+            "three_week_scores":[{"week":w,"points":round(next(float(g["points"]) for g in score_by_week[w] if int(g["roster_id"])==fid),2)} for w in sorted(score_by_week)[-3:]],
+            "schedule_luck_wins":round(wins[fid]-expected_wins[fid],2),
+            "weekly_matchup_margin":round(own_score-foe_score,2)
         })
     ai_narratives=generate_ai_narratives(latest,facts)
     ai_by_id={item["roster_id"]:item for item in ai_narratives["managers"]} if ai_narratives else {}
