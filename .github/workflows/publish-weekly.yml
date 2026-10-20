@@ -1,12 +1,6 @@
 name: Publish DieNasty weekly recap
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'generate_weekly.py'
-      - 'ai_narratives.py'
-      - 'build_nfl_reality.py'
   schedule:
     # GitHub Actions cron uses UTC; timezone keys are unsupported.
     # Tuesday: 08:00/11:00 CST, 09:00/12:00 CDT.
@@ -26,7 +20,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 8
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
