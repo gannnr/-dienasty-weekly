@@ -7,10 +7,12 @@ on:
       - 'generate_weekly.py'
       - 'ai_narratives.py'
   schedule:
-    - cron: '0 8 * * 2'
-      timezone: 'America/Chicago'
-    - cron: '0 11 * * 2'
-      timezone: 'America/Chicago'
+    # GitHub Actions cron uses UTC; timezone keys are unsupported.
+    # Tuesday: 08:00/11:00 CST, 09:00/12:00 CDT.
+    - cron: '0 14 * * 2'
+    - cron: '0 17 * * 2'
+    # Wednesday recovery if Tuesday was delayed or data was incomplete.
+    - cron: '0 14 * * 3'
   workflow_dispatch:
 
 permissions:
