@@ -39,12 +39,12 @@ def fit_length(item, fact=None):
     def total():
         return _words(" ".join(str(item.get(k,"")) for k in ("headline",)+fields))
     if fact:
-        allowed=set(re.findall(r"\d+(?:\\.\\d+)?",json.dumps(fact)))
+        allowed=set(re.findall(r"\d+(?:\.\d+)?",json.dumps(fact)))
         for key in fields:
             sentences=re.split(r"(?<=[.!?])\s+(?=[A-Z0-9])",item[key])
             clean=[]
             for sentence in sentences:
-                nums=re.findall(r"(?<!\w)\\d+(?:\\.\\d+)?",sentence)
+                nums=re.findall(r"(?<!\w)\\d+(?:\.\d+)?",sentence)
                 unknown=[n for n in nums if len(n)>=2 and n not in allowed]
                 if unknown:
                     print("Removing unsupported numerical claim for",fact["roster_id"],"values:",unknown)
