@@ -19,23 +19,40 @@ def _words(text):
 
 
 def fit_length(item):
-    """Trim overlong AI prose at sentence boundaries; preserve the final punchline."""
+    """Edit long reports deterministically while keeping a coherent closing punchline."""
     if not isinstance(item,dict):
         return item
     item=dict(item)
     fields=("film_room","bigger_conspiracy","next_episode")
-    def word_total():
+    aliases={"weekly_allplay_wins":"all-play wins","weekly_allplay_losses":"all-play losses",
+             "counted_best_ball":"best-ball lineup","top_three_share_pct":"top-three scoring share",
+             "season_total_points":"season points","season_record":"season record",
+             "weekly_rank":"weekly scoring rank","position_points":"positional scoring"}
+    for key in fields:
+        value=str(item.get(key,""))
+        for old,new in aliases.items():
+            value=value.replace(old,new)
+        item[key]=value
+    def total():
         return _words(" ".join(str(item.get(k,"")) for k in ("headline",)+fields))
-    while word_total()>WORD_MAX:
-        changed=False
-        for key in sorted(("film_room","bigger_conspiracy"),key=lambda k:-_words(str(item.get(k,"")))):
-            sentences=re.split(r"(?<=[.!?])\\s+(?=[A-Z0-9])",str(item.get(key,"")))
-            if len(sentences)>1 and _words(" ".join(sentences[:-1]))>=30:
-                item[key]=" ".join(sentences[:-1])
-                changed=True
-                break
-        if not changed:
+    for key,maximum in (("film_room",88),("bigger_conspiracy",78),("next_episode",46)):
+        words=str(item.get(key,"")).split()
+        if len(words)>maximum:
+            cut=" ".join(words[:maximum])
+            # Prefer a complete sentence near the cap; otherwise close cleanly.
+            marks=[m.end() for m in re.finditer(r"[.!?](?=\\s|$)",cut)]
+            if marks and marks[-1]>=len(cut)*0.72:
+                cut=cut[:marks[-1]]
+            elif not cut.endswith((".","!","?")):
+                cut=cut.rstrip(",;:")+"…"
+            item[key]=cut
+    while total()>WORD_MAX:
+        key=max(("film_room","bigger_conspiracy"),key=lambda k:_words(item[k]))
+        words=item[key].split()
+        if len(words)<=34:
             break
+        cut=" ".join(words[:-8]).rstrip(",;:")
+        item[key]=cut if cut.endswith((".","!","?")) else cut+"…"
     return item
 
 def generate(week, facts):
