@@ -27,7 +27,10 @@ def fit_length(item, fact=None):
     aliases={"weekly_allplay_wins":"all-play wins","weekly_allplay_losses":"all-play losses",
              "counted_best_ball":"best-ball lineup","top_three_share_pct":"top-three scoring share",
              "season_total_points":"season points","season_record":"season record",
-             "weekly_rank":"weekly scoring rank","position_points":"positional scoring"}
+             "weekly_rank":"weekly scoring rank","position_points":"positional scoring",
+             "scoring_deserved_wins":"expected wins","season_points_rank":"season scoring rank",
+             "schedule_luck_wins":"schedule luck","weekly_matchup_margin":"matchup margin",
+             "top_best_ball_contributors":"top contributors","actual_wins":"actual wins"}
     for key in fields:
         value=str(item.get(key,""))
         for old,new in aliases.items():
