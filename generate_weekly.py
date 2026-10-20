@@ -336,3 +336,5 @@ if __name__=="__main__":
 # Rebuild Week 6 with verified NFL Reality Check snapshot.
 
 # Test refreshed ESPN documentary analysis for Week 6.
+
+# Validate conflict-safe report publication.
