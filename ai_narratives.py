@@ -83,14 +83,15 @@ def generate(week, facts):
                      json.dumps({"season":2026,"week":week,"facts":group,
                                  "recent_narratives":history},ensure_ascii=False),
                      "text":{"format":{"type":"json_object"}},
-                     "max_output_tokens":5500}
+                     "reasoning":{"effort":"minimal"},
+                     "max_output_tokens":8500}
             req=urllib.request.Request(
                 "https://api.openai.com/v1/responses",
                 data=json.dumps(payload).encode("utf-8"),
                 headers={"Authorization":"Bearer "+token,"Content-Type":"application/json"},
                 method="POST")
             try:
-                with urllib.request.urlopen(req,timeout=65) as response:
+                with urllib.request.urlopen(req,timeout=75) as response:
                     result=json.load(response)
                 output=result.get("output_text") or "".join(
                     p.get("text","") for item in result.get("output",[])
@@ -121,8 +122,8 @@ def generate(week, facts):
             if group and attempt<1:
                 time.sleep(1)
         return accepted
-    batches=[[f for f in facts[i:i+2] if f["roster_id"] not in completed] for i in range(0,len(facts),2)]
-    with ThreadPoolExecutor(max_workers=5) as pool:
+    batches=[[f for f in facts[i:i+1] if f["roster_id"] not in completed] for i in range(0,len(facts),1)]
+    with ThreadPoolExecutor(max_workers=4) as pool:
         futures=[pool.submit(write_group,b) for b in batches if b]
         for future in as_completed(futures):
             completed.update(future.result())
