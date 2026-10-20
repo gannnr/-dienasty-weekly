@@ -1,9 +1,6 @@
 name: Publish DieNasty weekly recap
 
 on:
-  push:
-    branches: [main]
-    paths: ['data/integration-check.txt']
   schedule:
     # GitHub Actions cron uses UTC; timezone keys are unsupported.
     # Tuesday: 08:00/11:00 CST, 09:00/12:00 CDT.
