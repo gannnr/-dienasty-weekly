@@ -338,3 +338,5 @@ if __name__=="__main__":
 # Test refreshed ESPN documentary analysis for Week 6.
 
 # Validate conflict-safe report publication.
+
+# Test checkpointed AI editorial generation.
