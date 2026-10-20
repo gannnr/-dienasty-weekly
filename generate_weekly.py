@@ -334,3 +334,5 @@ if __name__=="__main__":
 # Verified Week 6 AI retry test.
 
 # Rebuild Week 6 with verified NFL Reality Check snapshot.
+
+# Test refreshed ESPN documentary analysis for Week 6.
