@@ -247,6 +247,12 @@ footer{color:var(--muted);font-size:12px;margin-top:36px}\n.manager-avatar{width
     parts += ['</tbody></table></div>']
     # A snapshot must explicitly match the completed report week; never show stale NFL stats.
     snapshot_path = Path('data') / f'nfl_week_2026_{latest}.json'
+    if not snapshot_path.is_file():
+        try:
+            from build_nfl_reality import build as build_nfl_snapshot
+            build_nfl_snapshot(latest)
+        except Exception as error:
+            print("NFL Reality Check data unavailable for week",latest,":",str(error)[:240])
     if snapshot_path.is_file():
         snapshot = json.loads(snapshot_path.read_text(encoding='utf-8'))
         if snapshot.get('season') != 2026 or snapshot.get('week') != latest:
