@@ -7,6 +7,7 @@ import os
 import re
 import urllib.request
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 MODEL=os.environ.get("DIENASTY_AI_MODEL","gpt-5-mini")
@@ -72,11 +73,9 @@ def generate(week, facts):
             pass
     if os.environ.get("REGENERATE_AI")=="1":
         completed={}
-    for start in range(0,len(facts),2):
-        group=[fact for fact in facts[start:start+2] if fact["roster_id"] not in completed]
-        if not group:
-            continue
-        for attempt in range(3):
+    def write_group(group):
+        accepted={}
+        for attempt in range(2):
             payload={"model":MODEL,"instructions":guide+
                      " Generate ONLY the supplied managers. Every story must total 190-210 words. "
                      "Use a distinct, punchy angle for each. Return complete JSON.",
@@ -91,7 +90,7 @@ def generate(week, facts):
                 headers={"Authorization":"Bearer "+token,"Content-Type":"application/json"},
                 method="POST")
             try:
-                with urllib.request.urlopen(req,timeout=150) as response:
+                with urllib.request.urlopen(req,timeout=65) as response:
                     result=json.load(response)
                 output=result.get("output_text") or "".join(
                     p.get("text","") for item in result.get("output",[])
@@ -103,12 +102,12 @@ def generate(week, facts):
                 for item in batch:
                     fact=next((f for f in group if f["roster_id"]==item.get("roster_id")),None)
                     if fact and validate({"managers":[item]},[fact]):
-                        completed[item["roster_id"]]=item
+                        accepted[item["roster_id"]]=item
                     else:
                         print("Rejected AI manager",item.get("roster_id"),
                               "word count",_words(" ".join(str(item.get(k,"")) for k in
                                ("headline","film_room","bigger_conspiracy","next_episode"))))
-                group=[f for f in group if f["roster_id"] not in completed]
+                group=[f for f in group if f["roster_id"] not in accepted]
                 if not group:
                     break
             except Exception as error:
@@ -119,11 +118,16 @@ def generate(week, facts):
                     except (ValueError,UnicodeError):
                         pass
                 print("AI small-batch attempt",attempt+1,"failed:",detail)
-            if group and attempt<2:
+            if group and attempt<1:
                 time.sleep(1)
-        # Checkpoint successful stories; failed managers will use the safe fallback.
-        saved.parent.mkdir(parents=True,exist_ok=True)
-        saved.write_text(json.dumps({"managers":list(completed.values())},indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+        return accepted
+    batches=[[f for f in facts[i:i+2] if f["roster_id"] not in completed] for i in range(0,len(facts),2)]
+    with ThreadPoolExecutor(max_workers=5) as pool:
+        futures=[pool.submit(write_group,b) for b in batches if b]
+        for future in as_completed(futures):
+            completed.update(future.result())
+            saved.parent.mkdir(parents=True,exist_ok=True)
+            saved.write_text(json.dumps({"managers":list(completed.values())},indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
     print("AI editor accepted",len(completed),"of",len(facts),"manager stories")
     return {"managers":list(completed.values())} if completed else None
 
