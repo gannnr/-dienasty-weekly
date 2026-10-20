@@ -59,55 +59,73 @@ def generate(week, facts):
       "\"film_room\":string,\"bigger_conspiracy\":string,\"next_episode\":string}]}; "
       "exactly one narrative for each supplied roster ID."
     )
-    narratives=None
-    for attempt in range(2):
-        payload={"model":MODEL,"instructions":guide,
-                 "input":"Return JSON only. Verified facts and narrative history: "+json.dumps({"season":2026,"week":week,"facts":facts,"recent_narratives":history},ensure_ascii=False),
-                 "text":{"format":{"type":"json_object"}},
-                 "max_output_tokens":15000}
-        if attempt:
-            payload["instructions"] += " CRITICAL: The previous attempt failed. Return exactly ten full-length stories. Avoid unverified figures."
-        req=urllib.request.Request(
-            "https://api.openai.com/v1/responses",
-            data=json.dumps(payload).encode("utf-8"),
-            headers={"Authorization":"Bearer "+token,"Content-Type":"application/json"},
-            method="POST")
+    # Generate small batches to prevent truncated JSON and retain individually valid work.
+    completed={}
+    if saved.exists():
         try:
-            with urllib.request.urlopen(req,timeout=150) as response:
-                result=json.load(response)
-            status=result.get("status")
-            output=result.get("output_text") or "".join(
-                part.get("text","") for item in result.get("output",[])
-                for part in item.get("content",[]) if part.get("type")=="output_text")
-            if not output.strip():
-                print("AI empty output; status:",status,"reason:",result.get("incomplete_details"))
-                raise ValueError("Empty model output")
-            candidate=json.loads(output)
-            if isinstance(candidate,dict) and isinstance(candidate.get("managers"),list):
-                print("AI candidate count:",len(candidate["managers"]),"word counts:",[
-                    _words(" ".join(str(x.get(k,"")) for k in ("headline","film_room","bigger_conspiracy","next_episode")))
-                    for x in candidate["managers"] if isinstance(x,dict)])
-            if not validate(candidate,facts):
-                raise ValueError("Narrative validation failed")
-            narratives=candidate
-            break
-        except Exception as error:
-            detail=str(error)[:250]
-            if hasattr(error,"read"):
-                try:
-                    body=json.loads(error.read().decode("utf-8"))
-                    detail=str(body.get("error",{}).get("message",detail))[:350]
-                except (ValueError,UnicodeError):
-                    pass
-            print("AI attempt",attempt+1,"failed:",detail)
-            if attempt==0:
-                time.sleep(2)
-    if narratives is None:
-        print("AI editor unavailable: retaining validated fallback report")
-        return None
-    saved.parent.mkdir(parents=True,exist_ok=True)
-    saved.write_text(json.dumps(narratives,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
-    return narratives
+            old=json.loads(saved.read_text(encoding="utf-8"))
+            for item in old.get("managers",[]):
+                fact=next((f for f in facts if f["roster_id"]==item.get("roster_id")),None)
+                if fact and validate({"managers":[item]},[fact]):
+                    completed[item["roster_id"]]=item
+        except (OSError,ValueError,AttributeError,TypeError):
+            pass
+    if os.environ.get("REGENERATE_AI")=="1":
+        completed={}
+    for start in range(0,len(facts),2):
+        group=[fact for fact in facts[start:start+2] if fact["roster_id"] not in completed]
+        if not group:
+            continue
+        for attempt in range(3):
+            payload={"model":MODEL,"instructions":guide+
+                     " Generate ONLY the supplied managers. Every story must total 190-210 words. "
+                     "Use a distinct, punchy angle for each. Return complete JSON.",
+                     "input":"Return JSON only. Verified facts and narrative history: "+
+                     json.dumps({"season":2026,"week":week,"facts":group,
+                                 "recent_narratives":history},ensure_ascii=False),
+                     "text":{"format":{"type":"json_object"}},
+                     "max_output_tokens":5500}
+            req=urllib.request.Request(
+                "https://api.openai.com/v1/responses",
+                data=json.dumps(payload).encode("utf-8"),
+                headers={"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+                method="POST")
+            try:
+                with urllib.request.urlopen(req,timeout=150) as response:
+                    result=json.load(response)
+                output=result.get("output_text") or "".join(
+                    p.get("text","") for item in result.get("output",[])
+                    for p in item.get("content",[]) if p.get("type")=="output_text")
+                if not output:
+                    raise ValueError("Empty AI output "+str(result.get("incomplete_details")))
+                candidate=json.loads(output)
+                batch=candidate.get("managers",[])
+                for item in batch:
+                    fact=next((f for f in group if f["roster_id"]==item.get("roster_id")),None)
+                    if fact and validate({"managers":[item]},[fact]):
+                        completed[item["roster_id"]]=item
+                    else:
+                        print("Rejected AI manager",item.get("roster_id"),
+                              "word count",_words(" ".join(str(item.get(k,"")) for k in
+                               ("headline","film_room","bigger_conspiracy","next_episode"))))
+                group=[f for f in group if f["roster_id"] not in completed]
+                if not group:
+                    break
+            except Exception as error:
+                detail=str(error)[:250]
+                if hasattr(error,"read"):
+                    try:
+                        detail=str(json.loads(error.read().decode("utf-8")).get("error",{}).get("message",detail))[:250]
+                    except (ValueError,UnicodeError):
+                        pass
+                print("AI small-batch attempt",attempt+1,"failed:",detail)
+            if group and attempt<2:
+                time.sleep(1)
+        # Checkpoint successful stories; failed managers will use the safe fallback.
+        saved.parent.mkdir(parents=True,exist_ok=True)
+        saved.write_text(json.dumps({"managers":list(completed.values())},indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+    print("AI editor accepted",len(completed),"of",len(facts),"manager stories")
+    return {"managers":list(completed.values())} if completed else None
 
 def validate(data,facts):
     if not isinstance(data,dict) or not isinstance(data.get("managers"),list):
