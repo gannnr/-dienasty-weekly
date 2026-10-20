@@ -10,15 +10,15 @@ import time
 from pathlib import Path
 
 MODEL=os.environ.get("DIENASTY_AI_MODEL","gpt-5-mini")
-WORD_MIN=130
-WORD_MAX=180
+WORD_MIN=180
+WORD_MAX=230
 
 def _words(text):
     return len(re.findall(r"\b[\w’'-]+\b",text))
 
 def generate(week, facts):
     saved=Path("data/narratives")/f"2026_{week}.json"
-    if saved.exists():
+    if saved.exists() and os.environ.get("REGENERATE_AI")!="1":
         cached=json.loads(saved.read_text(encoding="utf-8"))
         if validate(cached,facts):
             return cached
@@ -35,19 +35,29 @@ def generate(week, facts):
             except (OSError,ValueError):
                 pass
     guide=(
-      "You are DieNasty's ESPN/SportsCenter fantasy-football editorial team, "
-      "with 65% credible sportscaster analysis and 35% extreme Gen Alpha brainrot. "
-      "Write an original 150-170 word recap PER MANAGER, comprised of headline, "
-      "The Film Room (65-75 words), The Bigger Conspiracy (55-65 words), and Next Episode (30-40 words). Count the words in every manager's four fields before returning; all ten must be at least 130 words and no more than 180. Be savage, "
-      "funny, unpredictable, and distinct for every team. Refer to player contributions "
-      "and season trajectory. Change the framing, opening technique, and punchlines "
-      "between teams and weeks. Never invent statistics, player names, games, "
-      "injuries, or opponents. You may use only facts in the supplied fact sheets. "
-      "No percentages or derived metrics unless in those sheets. "
-      "The next episode section should be speculative, not assert future results. "
-      "Respond with valid JSON only. Return a JSON object: {\"managers\":[{\"roster_id\":number,"
-      "\"headline\":string,\"film_room\":string,\"bigger_conspiracy\":string,"
-      "\"next_episode\":string}]}. Exactly one entry for each supplied roster ID."
+      "You are GBSN DieNasty's unhinged ESPN SportsCenter and First Take writers room. "
+      "Write 180-230 ORIGINAL words PER MANAGER, 55% rigorous fantasy journalism and "
+      "45% wildly inventive Gen Alpha brainrot. Make the comedy relentless but varied: "
+      "absurd mock federal probes, grossly overconfident sports-take meltdowns, aura farming, "
+      "catastrophic glazing, generational crashouts, NPC allegations, fictional press conferences, "
+      "group-chat receipts, fake league scandals. Do NOT repeat canned jokes or slang across teams. "
+      "Each recap must use minimum TWO named counted players with verified points, "
+      "one specific meaningful advanced insight from countable lineup composition, positional "
+      "output, three-week production trend, all-play results or schedule luck. "
+      "Interpret the insight, not just list numbers. Choose a unique angle and headline per team. "
+      "Ground all numerical statements and names ONLY in the provided fact sheets; never invent "
+      "players, opponents, injuries, matchups, projections, rankings, or game context. "
+      "Any fictional investigation is clearly satirical. No unexplained database field names "
+      "like weekly_rank, season_record, or season_total_points in finished copy. "
+      "Avoid bland phrases like maintain momentum, roster construction meeting discipline, "
+      "remains competitive, or next week will be crucial. End with a savage original punchline. "
+      "Three paragraphs: film_room 75-95 words, bigger_conspiracy 65-85 words, "
+      "next_episode 35-50 words, plus sensational headline. "
+      "Count all four fields together: 180 to 230 words. "
+      "Recent narratives are for continuity but avoid repeating their jokes. "
+      "Return valid JSON only. Schema: {\"managers\":[{\"roster_id\":number,\"headline\":string,"
+      "\"film_room\":string,\"bigger_conspiracy\":string,\"next_episode\":string}]}; "
+      "exactly one narrative for each supplied roster ID."
     )
     narratives=None
     for attempt in range(2):
