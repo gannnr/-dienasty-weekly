@@ -49,7 +49,7 @@ def fit_length(item, fact=None):
                     clean.append(sentence)
             if clean:
                 item[key]=" ".join(clean)
-    for key,maximum in (("film_room",88),("bigger_conspiracy",78),("next_episode",46)):
+    for key,maximum in (("film_room",82),("bigger_conspiracy",72),("next_episode",42)):
         words=str(item.get(key,"")).split()
         if len(words)>maximum:
             cut=" ".join(words[:maximum])
@@ -58,7 +58,7 @@ def fit_length(item, fact=None):
             if marks and marks[-1]>=len(cut)*0.72:
                 cut=cut[:marks[-1]]
             elif not cut.endswith((".","!","?")):
-                cut=cut.rstrip(",;:")+"…"
+                cut=cut.rstrip(",;:")+". "
             item[key]=cut
     while total()>WORD_MAX:
         key=max(("film_room","bigger_conspiracy"),key=lambda k:_words(item[k]))
@@ -66,8 +66,23 @@ def fit_length(item, fact=None):
         if len(words)<=34:
             break
         cut=" ".join(words[:-8]).rstrip(",;:")
-        item[key]=cut if cut.endswith((".","!","?")) else cut+"…"
+        item[key]=cut if cut.endswith((".","!","?")) else cut+"."
     return item
+
+VOICES=("SportsCenter meltdown","First Take argument","30 for 30 documentary","Film-room analyst","Postgame press conference","League group-chat correspondent","Mock financial analyst","Emergency broadcast","Championship committee","Sports radio caller")
+BANNED_PHRASES=("satirical federal probe","league integrity committee","aura farming","npc allegation","schedule_luck_wins","weekly_allplay_wins","scoring_deserved_wins","season_total_points","season_points_rank","counted_best_ball","top_three_share_pct","weekly_matchup_margin","film room smells")
+BEST_BALL_BAD_ADVICE=("start your","bench your","set your lineup","choose your starter","start the qb","play the qb","force correlation","pick the qb")
+def editorial_issues(item,fact):
+    prose=" ".join(str(item.get(k,"")) for k in ("headline","film_room","bigger_conspiracy","next_episode"))
+    lower=prose.lower()
+    issues=[]
+    for phrase in BANNED_PHRASES+BEST_BALL_BAD_ADVICE:
+        if phrase in lower: issues.append("banned phrase: "+phrase)
+    if any(str(item.get(k,"")).rstrip().endswith("…") for k in ("film_room","bigger_conspiracy","next_episode")):
+        issues.append("truncated sentence")
+    players=[p["name"].lower() for p in fact.get("counted_best_ball",{}).get("top_five",[]) if p.get("name")]
+    if sum(name in lower for name in players)<2: issues.append("fewer than two counted players")
+    return issues
 
 def generate(week, facts):
     saved=Path("data/narratives")/f"2026_{week}.json"
@@ -119,7 +134,7 @@ def generate(week, facts):
             old=json.loads(saved.read_text(encoding="utf-8"))
             for item in old.get("managers",[]):
                 fact=next((f for f in facts if f["roster_id"]==item.get("roster_id")),None)
-                if fact and validate({"managers":[item]},[fact]):
+                if fact and validate({"managers":[item]},[fact]) and not editorial_issues(item,fact):
                     completed[item["roster_id"]]=item
         except (OSError,ValueError,AttributeError,TypeError):
             pass
@@ -130,10 +145,10 @@ def generate(week, facts):
         for attempt in range(2):
             payload={"model":MODEL,"instructions":guide+
                      " Generate ONLY the supplied managers. Every story must total 190-210 words. "
-                     "Use a distinct, punchy angle for each. Return complete JSON.",
+                     "Use the assigned voice and avoid any repeated federal-investigation jokes. No raw variable names or lineup-setting advice in this BEST BALL league. Return complete JSON.",
                      "input":"Return JSON only. Verified facts and narrative history: "+
                      json.dumps({"season":2026,"week":week,"facts":group,
-                                 "recent_narratives":history},ensure_ascii=False),
+                                 "recent_narratives":history,"assigned_voice":VOICES[group[0]["roster_id"]%len(VOICES)]},ensure_ascii=False),
                      "text":{"format":{"type":"json_object"}},
                      "reasoning":{"effort":"minimal"},
                      "max_output_tokens":8500}
@@ -158,7 +173,7 @@ def generate(week, facts):
                     if fact and validate({"managers":[item]},[fact]):
                         accepted[item["roster_id"]]=item
                     else:
-                        print("Rejected AI manager",item.get("roster_id"),
+                        print("Rejected AI manager",item.get("roster_id"),"editorial issues:",editorial_issues(item,fact) if fact else ["missing facts"],
                               "word count",_words(" ".join(str(item.get(k,"")) for k in
                                ("headline","film_room","bigger_conspiracy","next_episode"))))
                 group=[f for f in group if f["roster_id"] not in accepted]
