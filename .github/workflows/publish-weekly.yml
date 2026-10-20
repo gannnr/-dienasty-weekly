@@ -30,6 +30,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Sync latest main before generating
+        run: git pull --ff-only origin main
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -54,10 +56,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Publish latest finalized DieNasty weekly recap"
-          for attempt in 1 2 3; do
-            if git pull --rebase origin main && git push origin HEAD:main; then
-              exit 0
-            fi
-            sleep 3
-          done
-          exit 1
+          # Files are generated from the latest checkout. Fail cleanly on a race;
+          # never leave an unresolved rebase and retry it.
+          if ! git push origin HEAD:main; then
+            echo "::error::Concurrent update detected. Re-run the workflow from fresh main."
+            exit 1
+          fi
