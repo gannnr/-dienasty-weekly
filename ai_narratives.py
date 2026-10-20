@@ -17,6 +17,27 @@ WORD_MAX=230
 def _words(text):
     return len(re.findall(r"\b[\w’'-]+\b",text))
 
+
+def fit_length(item):
+    """Trim overlong AI prose at sentence boundaries; preserve the final punchline."""
+    if not isinstance(item,dict):
+        return item
+    item=dict(item)
+    fields=("film_room","bigger_conspiracy","next_episode")
+    def word_total():
+        return _words(" ".join(str(item.get(k,"")) for k in ("headline",)+fields))
+    while word_total()>WORD_MAX:
+        changed=False
+        for key in sorted(("film_room","bigger_conspiracy"),key=lambda k:-_words(str(item.get(k,"")))):
+            sentences=re.split(r"(?<=[.!?])\\s+(?=[A-Z0-9])",str(item.get(key,"")))
+            if len(sentences)>1 and _words(" ".join(sentences[:-1]))>=30:
+                item[key]=" ".join(sentences[:-1])
+                changed=True
+                break
+        if not changed:
+            break
+    return item
+
 def generate(week, facts):
     saved=Path("data/narratives")/f"2026_{week}.json"
     if saved.exists() and os.environ.get("REGENERATE_AI")!="1":
@@ -100,7 +121,8 @@ def generate(week, facts):
                     raise ValueError("Empty AI output "+str(result.get("incomplete_details")))
                 candidate=json.loads(output)
                 batch=candidate.get("managers",[])
-                for item in batch:
+                for raw_item in batch:
+                    item=fit_length(raw_item)
                     fact=next((f for f in group if f["roster_id"]==item.get("roster_id")),None)
                     if fact and validate({"managers":[item]},[fact]):
                         accepted[item["roster_id"]]=item
