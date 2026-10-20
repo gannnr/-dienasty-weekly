@@ -18,7 +18,7 @@ def _words(text):
     return len(re.findall(r"\b[\w’'-]+\b",text))
 
 
-def fit_length(item):
+def fit_length(item, fact=None):
     """Edit long reports deterministically while keeping a coherent closing punchline."""
     if not isinstance(item,dict):
         return item
@@ -35,6 +35,20 @@ def fit_length(item):
         item[key]=value
     def total():
         return _words(" ".join(str(item.get(k,"")) for k in ("headline",)+fields))
+    if fact:
+        allowed=set(re.findall(r"\\d+(?:\\.\\d+)?",json.dumps(fact)))
+        for key in fields:
+            sentences=re.split(r"(?<=[.!?])\\s+(?=[A-Z0-9])",item[key])
+            clean=[]
+            for sentence in sentences:
+                nums=re.findall(r"(?<!\\w)\\d+(?:\\.\\d+)?",sentence)
+                unknown=[n for n in nums if len(n)>=2 and n not in allowed]
+                if unknown:
+                    print("Removing unsupported numerical claim for",fact["roster_id"],"values:",unknown)
+                else:
+                    clean.append(sentence)
+            if clean:
+                item[key]=" ".join(clean)
     for key,maximum in (("film_room",88),("bigger_conspiracy",78),("next_episode",46)):
         words=str(item.get(key,"")).split()
         if len(words)>maximum:
@@ -139,8 +153,8 @@ def generate(week, facts):
                 candidate=json.loads(output)
                 batch=candidate.get("managers",[])
                 for raw_item in batch:
-                    item=fit_length(raw_item)
-                    fact=next((f for f in group if f["roster_id"]==item.get("roster_id")),None)
+                    fact=next((f for f in group if f["roster_id"]==raw_item.get("roster_id")),None)
+                    item=fit_length(raw_item,fact)
                     if fact and validate({"managers":[item]},[fact]):
                         accepted[item["roster_id"]]=item
                     else:
