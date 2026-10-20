@@ -306,3 +306,5 @@ if __name__=="__main__":
 # Weekly schedule repair verification, October 2026.
 
 # Verified Week 6 AI retry test.
+
+# Rebuild Week 6 with verified NFL Reality Check snapshot.
