@@ -39,7 +39,6 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           DIENASTY_AI_MODEL: gpt-5-mini
-          REGENERATE_AI: '1'
         run: python generate_weekly.py
       - name: Validate generated report quality
         run: python validate_report.py
