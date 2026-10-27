@@ -1,9 +1,6 @@
 name: Publish DieNasty weekly recap
 
 on:
-  push:
-    branches: [main]
-    paths: ['supabase_nfl_fallback.py']
   schedule:
     # GitHub Actions cron uses UTC; timezone keys are unsupported.
     # 08:00 Central in either daylight or standard time; select by local hour.
@@ -51,7 +48,6 @@ jobs:
         run: python -m py_compile generate_weekly.py ai_narratives.py build_nfl_reality.py supabase_nfl_fallback.py
       - name: Verify Supabase fallback connectivity
         if: steps.schedule_gate.outputs.run == 'true'
-        continue-on-error: true
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
