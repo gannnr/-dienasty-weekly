@@ -1,6 +1,9 @@
 name: Publish DieNasty weekly recap
 
 on:
+  push:
+    branches: [main]
+    paths: ['supabase_nfl_fallback.py']
   schedule:
     # GitHub Actions cron uses UTC; timezone keys are unsupported.
     # 08:00 Central in either daylight or standard time; select by local hour.
@@ -45,12 +48,14 @@ jobs:
           python-version: '3.12'
       - name: Validate generator syntax
         if: steps.schedule_gate.outputs.run == 'true'
-        run: python -m py_compile generate_weekly.py ai_narratives.py build_nfl_reality.py
+        run: python -m py_compile generate_weekly.py ai_narratives.py build_nfl_reality.py supabase_nfl_fallback.py
       - name: Generate report from finalized Sleeper scores
         if: steps.schedule_gate.outputs.run == 'true'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           DIENASTY_AI_MODEL: gpt-5-mini
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
         run: python generate_weekly.py
       - name: Validate generated report quality
         if: steps.schedule_gate.outputs.run == 'true'
