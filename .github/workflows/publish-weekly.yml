@@ -3,7 +3,7 @@ name: Publish DieNasty weekly recap
 on:
   push:
     branches: [main]
-    paths: ['data/nfl_week_2026_7.json']
+    paths: ['validate_report.py']
   schedule:
     # GitHub Actions cron uses UTC; timezone keys are unsupported.
     # 08:00 Central in either daylight or standard time; select by local hour.
