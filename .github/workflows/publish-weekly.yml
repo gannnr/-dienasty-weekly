@@ -1,12 +1,17 @@
 name: Publish DieNasty weekly recap
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-weekly.yml'
   schedule:
     # GitHub Actions cron uses UTC; timezone keys are unsupported.
-    # Tuesday: 08:00/11:00 CST, 09:00/12:00 CDT.
+    # 08:00 Central in either daylight or standard time; select by local hour.
+    - cron: '0 13 * * 2'
     - cron: '0 14 * * 2'
-    - cron: '0 17 * * 2'
-    # Wednesday recovery if Tuesday was delayed or data was incomplete.
+    # Wednesday 08:00 Central recovery, accounting for DST.
+    - cron: '0 13 * * 3'
     - cron: '0 14 * * 3'
   workflow_dispatch:
 
@@ -22,24 +27,40 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
+      - name: Check local scheduled hour
+        id: schedule_gate
+        run: |
+          if [[ "${{ github.event_name }}" != "schedule" || "$(TZ=America/Chicago date +%H)" == "08" ]]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping UTC slot outside 08:00 Central."
+          fi
       - name: Checkout repository
+        if: steps.schedule_gate.outputs.run == 'true'
         uses: actions/checkout@v4
       - name: Sync latest main before generating
+        if: steps.schedule_gate.outputs.run == 'true'
         run: git pull --ff-only origin main
       - name: Setup Python
+        if: steps.schedule_gate.outputs.run == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Validate generator syntax
+        if: steps.schedule_gate.outputs.run == 'true'
         run: python -m py_compile generate_weekly.py ai_narratives.py build_nfl_reality.py
       - name: Generate report from finalized Sleeper scores
+        if: steps.schedule_gate.outputs.run == 'true'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           DIENASTY_AI_MODEL: gpt-5-mini
         run: python generate_weekly.py
       - name: Validate generated report quality
+        if: steps.schedule_gate.outputs.run == 'true'
         run: python validate_report.py
       - name: Publish updated website if content changed
+        if: steps.schedule_gate.outputs.run == 'true'
         run: |
           mkdir -p data/narratives
           git add index.html week-5.html data/awardz/ data/narratives/ data/nfl_week_2026_*.json
