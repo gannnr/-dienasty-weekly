@@ -1,7 +1,7 @@
 {
   "season": 2026,
   "week": 7,
-  "source": "Sleeper Fantasy Data Hub Supabase nfl_player_game JOIN nfl_players, verified 2026 Week 7",
+  "source": "Sleeper Fantasy Data Hub (Supabase nfl_player_game joined to nfl_players), Week 7 verified",
   "players": [
     {
       "name": "Jaxon Smith-Njigba",
