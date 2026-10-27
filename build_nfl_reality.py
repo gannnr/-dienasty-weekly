@@ -19,12 +19,20 @@ def build(week,season=2026):
         if old.get("week")==week and old.get("season")==season and len(old.get("players",[]))==3:
             print("Verified NFL snapshot already present:",path)
             return
-    request=urllib.request.Request(URL,headers={"User-Agent":"DieNasty-Weekly/1.0"})
-    with urllib.request.urlopen(request,timeout=85) as response:
-        reader=csv.DictReader(io.TextIOWrapper(response,encoding="utf-8-sig"))
-        rows=[r for r in reader if r.get("season")==str(season) and r.get("week")==str(week) and r.get("season_type","REG")=="REG"]
-    if len(rows)<100:
-        raise ValueError(f"Insufficient verified NFL player-game records for {season} week {week}: {len(rows)}")
+    rows=[]
+    try:
+        request=urllib.request.Request(URL,headers={"User-Agent":"DieNasty-Weekly/1.0"})
+        with urllib.request.urlopen(request,timeout=40) as response:
+            reader=csv.DictReader(io.TextIOWrapper(response,encoding="utf-8-sig"))
+            rows=[r for r in reader if r.get("season")==str(season) and r.get("week")==str(week) and r.get("season_type","REG")=="REG"]
+        if len(rows)<100:
+            raise ValueError(f"Only {len(rows)} nflverse records for week {week}")
+        source="nflverse public player_stats weekly game data"
+    except Exception as exc:
+        print("nflverse week unavailable; trying authenticated Supabase:",str(exc)[:180])
+        from supabase_nfl_fallback import week_rows
+        rows=week_rows(week,season)
+        source="Sleeper Fantasy Data Hub Supabase nfl_player_game joined to nfl_players"
     by_position={}
     for r in rows:
         pos=r.get("position","")
@@ -58,7 +66,7 @@ def build(week,season=2026):
           f"{n(qb.get('passing_yards'))} passing yards and {n(qb.get('passing_tds'))} passing touchdowns on {n(qb.get('attempts'))} attempts. The box score has entered its villain era.")
     ]
     path.parent.mkdir(exist_ok=True,parents=True)
-    path.write_text(json.dumps({"season":season,"week":week,"source":"nflverse public player_stats weekly game data","players":result},indent=2)+"\n")
+    path.write_text(json.dumps({"season":season,"week":week,"source":source,"players":result},indent=2)+"\n")
     print("Created verified NFL Reality Check:",path)
 if __name__=="__main__":
     if len(sys.argv)!=2: raise SystemExit("Usage: python build_nfl_reality.py WEEK")
