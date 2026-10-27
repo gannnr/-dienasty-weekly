@@ -24,7 +24,7 @@ checks = {
     "expected wins math": "expected_wins[rid]" in source,
     "valid HTML": page.strip().endswith("</html>"),
 }
-match = re.search(r"WEEK\\s+(\\d+)<br>IS UNWELL", page)
+match = re.search(r"WEEK\s+(\d+)<br>IS UNWELL", page)
 if match:
     snapshot = Path("data") / ("nfl_week_2026_" + match.group(1) + ".json")
     checks["NFL Reality Check snapshot exists"] = snapshot.is_file()
