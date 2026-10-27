@@ -42,3 +42,5 @@ for check, passed in checks.items():
     print(("PASS" if passed else "FAIL") + " " + check)
 if not all(checks.values()):
     sys.exit("Generated page failed quality checks: old live site remains untouched.")
+
+# Week 7 NFL Reality Check verification after corrected snapshot validation.
