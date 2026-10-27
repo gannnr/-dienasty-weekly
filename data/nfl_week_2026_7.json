@@ -1,0 +1,88 @@
+{
+  "season": 2026,
+  "week": 7,
+  "source": "Sleeper Fantasy Data Hub Supabase nfl_player_game JOIN nfl_players, verified 2026 Week 7",
+  "players": [
+    {
+      "name": "Jaxon Smith-Njigba",
+      "team": "SEA",
+      "opponent": "KC",
+      "espn_id": "4430878",
+      "kind": "receiving",
+      "label": "TARGET VACUUM",
+      "metrics": [
+        [
+          "TARGETS",
+          12
+        ],
+        [
+          "RECEPTIONS",
+          9
+        ],
+        [
+          "REC YARDS",
+          150
+        ],
+        [
+          "REC TD",
+          1
+        ]
+      ],
+      "story": "12 targets, 9 catches, 150 receiving yards and a touchdown. Seattle's target vacuum swallowed the Kansas City game plan."
+    },
+    {
+      "name": "Tony Pollard",
+      "team": "TEN",
+      "opponent": "CLE",
+      "espn_id": "3916148",
+      "kind": "rushing",
+      "label": "WORKLOAD LANDLORD",
+      "metrics": [
+        [
+          "CARRIES",
+          25
+        ],
+        [
+          "TARGETS",
+          3
+        ],
+        [
+          "RUSH YARDS",
+          129
+        ],
+        [
+          "RUSH TD",
+          3
+        ]
+      ],
+      "story": "25 carries, 129 rushing yards and 3 rushing touchdowns. The workload department has one employee."
+    },
+    {
+      "name": "Drake Maye",
+      "team": "NE",
+      "opponent": "CHI",
+      "espn_id": "4431452",
+      "kind": "passing",
+      "label": "AIR RAID COMMANDER",
+      "metrics": [
+        [
+          "ATTEMPTS",
+          31
+        ],
+        [
+          "COMPLETIONS",
+          24
+        ],
+        [
+          "PASS YARDS",
+          321
+        ],
+        [
+          "PASS TD",
+          2
+        ]
+      ],
+      "story": "321 passing yards and 2 passing touchdowns on 31 attempts. New England's passing offense delivered an aerial barrage."
+    }
+  ]
+}
