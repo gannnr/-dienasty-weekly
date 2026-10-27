@@ -24,13 +24,20 @@ checks = {
     "expected wins math": "expected_wins[rid]" in source,
     "valid HTML": page.strip().endswith("</html>"),
 }
-match = re.search(r"WEEK\s+(\d+)<br>IS UNWELL", page)
+match = re.search(r"WEEK\\s+(\\d+)<br>IS UNWELL", page)
 if match:
     snapshot = Path("data") / ("nfl_week_2026_" + match.group(1) + ".json")
-    checks["NFL Reality Check section"] = "NFL reality check" in page
-    if snapshot.exists():
+    checks["NFL Reality Check snapshot exists"] = snapshot.is_file()
+    checks["NFL Reality Check section"] = "NFL reality check" in page.lower()
+    if snapshot.is_file():
         data=json.loads(snapshot.read_text(encoding="utf-8"))
-        checks["three verified NFL player cards"] = all(player["name"] in page for player in data["players"]) and len(data["players"]) == 3
+        players=data.get("players",[])
+        checks["NFL snapshot matches report week"] = data.get("week")==int(match.group(1)) and data.get("season")==2026
+        checks["three verified NFL player cards"] = len(players)==3 and all(p.get("name") in page and len(p.get("metrics",[]))==4 for p in players)
+    else:
+        checks["three verified NFL player cards"] = False
+else:
+    checks["NFL Reality Check snapshot exists"] = False
 for check, passed in checks.items():
     print(("PASS" if passed else "FAIL") + " " + check)
 if not all(checks.values()):
