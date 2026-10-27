@@ -1,0 +1,96 @@
+{
+  "season": 2026,
+  "week": 7,
+  "awards": [
+    {
+      "roster_id": 5,
+      "name": "4whoresman",
+      "award_id": "titanic",
+      "award": "Titanic Performance",
+      "emoji": "\ud83d\udea2",
+      "strength": 100.0,
+      "evidence": "Down 56.71 points from last week. Iceberg speedrun."
+    },
+    {
+      "roster_id": 3,
+      "name": "Connecticut Cheddarwurst",
+      "award_id": "underdawg",
+      "award": "Underdawg Energy",
+      "emoji": "\ud83d\udc15",
+      "strength": 100.0,
+      "evidence": "Beat The Chavenators, a higher-scoring season team. The upset department is hiring."
+    },
+    {
+      "roster_id": 7,
+      "name": "Krispy Kremepie",
+      "award_id": "carry",
+      "award": "One-Man Carry Job",
+      "emoji": "\ud83d\ude80",
+      "strength": 100.0,
+      "evidence": "Top scorer contributed 26% of team points. Everybody else rode shotgun."
+    },
+    {
+      "roster_id": 1,
+      "name": "StinkyButt69",
+      "award_id": "boss",
+      "award": "Final Boss",
+      "emoji": "\ud83d\udc51",
+      "strength": 100.0,
+      "evidence": "1205.66 season points with a winning record. Final boss health bar detected."
+    },
+    {
+      "roster_id": 2,
+      "name": "The Chavenators",
+      "award_id": "cursed",
+      "award": "Cursed by the Algorithm",
+      "emoji": "\ud83d\udc80",
+      "strength": 100.0,
+      "evidence": "Scored 178.90 and STILL lost. The universe is farming engagement."
+    },
+    {
+      "roster_id": 4,
+      "name": "Wes Mantooth",
+      "award_id": "revival",
+      "award": "Back From the Dead",
+      "emoji": "\ud83e\udddf",
+      "strength": 100.0,
+      "evidence": "Jumped from #10 to #6 in scoring. Lazarus got the Wi-Fi password."
+    },
+    {
+      "roster_id": 9,
+      "name": "bingbongtinydong",
+      "award_id": "execution",
+      "award": "Public Execution",
+      "emoji": "\ud83e\ude93",
+      "strength": 100.0,
+      "evidence": "Won by 75.32. The opponent has been placed in witness protection."
+    },
+    {
+      "roster_id": 8,
+      "name": "docjoff",
+      "award_id": "stinker",
+      "award": "Generational Stinker",
+      "emoji": "\ud83d\uddd1\ufe0f",
+      "strength": 100.0,
+      "evidence": "Scored 112.61. The offense has been reported missing."
+    },
+    {
+      "roster_id": 6,
+      "name": "Lamar hit it, Cam came",
+      "award_id": "nuke",
+      "award": "Nuclear Warhead",
+      "emoji": "\ud83d\udca3",
+      "strength": 90.007,
+      "evidence": "185.04 points. The scoreboard just filed a workers comp claim."
+    },
+    {
+      "roster_id": 10,
+      "name": "The fighting greeks",
+      "award_id": "brick",
+      "award": "Brick Squad",
+      "emoji": "\ud83e\uddf1",
+      "strength": 60.378,
+      "evidence": "Top three produced 71.11 points. Stars on airplane mode."
+    }
+  ]
+}
