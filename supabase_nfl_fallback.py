@@ -39,3 +39,5 @@ def week_rows(week,season):
     if len(normalized)<75:
         raise ValueError("Supabase NFL metadata coverage too low: "+str(len(normalized)))
     return normalized
+
+# CI connectivity smoke test.
