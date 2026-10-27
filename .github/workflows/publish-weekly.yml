@@ -49,6 +49,13 @@ jobs:
       - name: Validate generator syntax
         if: steps.schedule_gate.outputs.run == 'true'
         run: python -m py_compile generate_weekly.py ai_narratives.py build_nfl_reality.py supabase_nfl_fallback.py
+      - name: Verify Supabase fallback connectivity
+        if: steps.schedule_gate.outputs.run == 'true'
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: python -c "from supabase_nfl_fallback import week_rows; print('Supabase rows:',len(week_rows(7,2026)))"
       - name: Generate report from finalized Sleeper scores
         if: steps.schedule_gate.outputs.run == 'true'
         env:
