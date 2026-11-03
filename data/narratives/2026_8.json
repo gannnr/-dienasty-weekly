@@ -1,0 +1,46 @@
+{
+  "managers": [
+    {
+      "roster_id": 6,
+      "headline": "Undefeated Accounting: Pollard’s Payday and Two-TE Arbitrage Keep Ledger Gleaming",
+      "film_room": "Film room reads like a quarterly earnings call: this best-ball WIN produced 140.56 points with Tony Pollard depositing 29.95, Geno Smith adding 23.00 and Puka Nacua contributing 22.25. Counted lineup composition shows RBs led with 56.7 points, WRs 44.6 and QB 35.61 — RB-dominant weeks are underwriting the undefeated balance sheet. The three-week production trend (133.00 → 185.04 → 140.56) proves durability: after a monster spike, the portfolio reverts to a high floor.",
+      "bigger_conspiracy": "Conspiracy board: top-three share sits at 53.5% — over half the returns come from Pollard, Geno and Puka — yet the team’s expected wins 4.78 and schedule_luck 3.22 signal market inefficiency rather than pure luck. Meaningful advanced insight: RB positional output (56.7) is the principal hedge against QB/WR variance; when Pollard cashes, the squad tolerates middling TE performance (TE just 3.65) and still posts blowout-capable totals.",
+      "next_episode": "Next episode: the accounting stays simple — let RBs compound, let WRs sprinkle upside, and collect undefeated interest. Savage closer: this portfolio won’t IPO — it’ll pay dividends until someone shorts Tony Pollard’s next paycheck."
+    },
+    {
+      "roster_id": 2,
+      "headline": "The Chavenators: 116.48 and a Best-Ball Tragedy Where the Top Three Did Their Jobs",
+      "film_room": "Film room: The Chavenators posted 116.48 in a loss where D’Andre Swift’s counted 27.40 and Dak Prescott’s 23.05 were headline acts while Blake Corum added 13.30 — together those three accounted for 54.7% of the team’s counted firepower. Positional split leaned RB-heavy (RBs 61.65 vs QB 33.03 vs WR 18.0 vs TE 3.8), meaning the roster’s counted success came from ground-game dominance, not aerial surprise.",
+      "bigger_conspiracy": "Conspiracy: All-play results were catastrophic (0-9) and matchup margin −24.08 explains why production didn’t translate — you can have top-three share magic and still be steamrolled by correlation failure. The meaningful insight: RBs supplied 61.65 points but WR/TE floors (WR 18.0, TE 3.8) were microscopic; in best ball that structural imbalance makes you hostage to a few elite rushers showing up.",
+      "next_episode": "Expect The Chavenators to continue leaning into RB scoring since it’s doing the heavy lifting; with season points 1,313.76 and season scoring rank 3 the offense still produces, but this loss proves ceiling without correlation is just a sad party — savage closer: they ran a heist and forgot to bring the getaway car."
+    },
+    {
+      "roster_id": 5,
+      "headline": "Two-QB Buffet Suffers Food Poisoning: 4whoresman’s Best-Ball Banquet Flops",
+      "film_room": "Film room: 4whoresman’s auto-lineup plated 135.77 and lost to Krispy Kremepie’s 172.84 — Jared Goff and Kirk Cousins did what they always do, combining for the counted QB haul of 48.97 (Kirk Cousins 35.18 counted, Jared Goff 13.79), while RBs chipped 66.5 (Jonah Coleman 19.40, James Cook III 17.60, Kenny Gainwell 16.0). Over the last three weeks the menu reads 176.08 → 119.37 → 135.77, a cooling trend after a hot opener.",
+      "bigger_conspiracy": "Bigger conspiracy: this is best-ball capitalism run through a buffet cart — stacking two QBs and a tight RB trio reduces variance when variance cooperates. But all-play 1-8 this week and a -37.07 weekly matchup margin reveal the other side of concentration risk: when the opponent’s counted five produces a broader positional distribution (like Krispy Kremepie’s higher WR/TE spread), a clustered top-three can be steamrolled.",
+      "next_episode": "Next episode: 4whoresman’s season_points 1,307.56 (rank 4) and steady QB/RB production mean the banquet will cook plenty more weeks, but that top-three concentration keeps inviting theatrical collapses — this week the buffet lost to someone who brought a seven-course blowout."
+    },
+    {
+      "roster_id": 8,
+      "headline": "docjoff’s Best-Ball Blues: Mahomes’ Quiet, Allgeier’s March, Nabers’ Spotlight Doesn’t Pay Rent",
+      "film_room": "Film room: Week 8’s automatic lineup gifted 176.89 points and a win — Patrick Mahomes (41.19) led the charge, Tyler Allgeier piled 36.85, and Adonai Mitchell added 27.45. Counted composition shows RBs supplied 84.0 points, WRs 45.95 and QB 41.19: this is a running-back-fueled ledger where three-week production quietly climbed 118.83 → 112.61 → 176.89, revealing a late spike rather than steady output.",
+      "bigger_conspiracy": "Bigger conspiracy: docjoff’s counted five leaned heavy on RB work and a single superstar QB — a bankroll-style construction that pays out when the lead actors hit. Schedule luck 0.89 nudged this one toward victory, but the real advanced takeaway is positional redundancy: RBs delivering 84.0 points insulated volatility and turned Mahomes’ ceiling into a payday rather than a gamble.",
+      "next_episode": "Next episode: expect more RB-first counted weeks that let Mahomes act like a supporting star. If Emmett Johnson (26.05) and Rachaad White (13.5) keep chipping, docjoff’s counted engine will sustain high ceilings — or at least sell out the comedy club."
+    },
+    {
+      "roster_id": 10,
+      "headline": "The fighting greeks: QB fireworks and a WR bailout fall three slots short in a best-ball Greek tragedy",
+      "film_room": "Film-room autopsy: The fighting greeks dropped 165.75 points in a LOSS to docjoff despite Jordan Love (30.27), Jahmyr Gibbs (26.30) and Jaxon Smith-Njigba (24.30) being the counted engine. The counted positional split shows QBs = 48.0 and RBs = 48.0 matching each other while WRs trailed at 33.4 and TE surprisingly contributed 36.35 — that TE number masked volatility elsewhere.",
+      "bigger_conspiracy": "Conspiracy board: top-three share 48.8% means almost half your scoring lives in Love/Gibbs/Smith-Njigba — elite when they pop, brittle when depth ghosts. Meaningful insight: matching QB and RB counted output (48.0 each) created ceiling parity but left WRs insufficient to outscore an opponent who edged you by 11.14 points; in plain math, your top duo carried but your perimeter didn’t amplify.",
+      "next_episode": "Next episode: this best-ball soap keeps casting the same leads — Love, Gibbs, JSN — and praying bench understudies stop being extras. Savage closer: you scored like a contender but lost like a poet who forgot the last line."
+    },
+    {
+      "roster_id": 3,
+      "headline": "Connecticut Cheddarwurst’s 140.06 Cliff: Maye & Chase Throw a Party the Opponent Crashed",
+      "film_room": "Film room: Connecticut Cheddarwurst dropped 140.06 in a loss to Wes Mantooth (149.89). Drake Maye accounted for 33.46 and Ja'Marr Chase chipped 30.35 while Trey McBride added 18.45 — combined those three were 58.7% of the counted week, and WRs piled 81.75 points versus RBs’ tiny 6.4. Over three weeks the team logged 124.8 → 181.71 → 140.06, a boom-bust pulse where QB/WR fireworks carry the load but RB scarcity sets panic.",
+      "bigger_conspiracy": "Conspiracy: this roster built like a nightclub DJ who only plays bangers — top-three share 58.7% means when Maye plus two superstars hit, the room erupts; when they don’t, the lights go out. Meaningful insight: with WRs delivering 81.75 points and RBs barely existing (6.4), the counted lineup lacked positional diversification — that explains the -9.83 matchup margin and schedule_luck of -0.67.",
+      "next_episode": "Next episode: the soap-opera engine keeps selling tickets because Maye’s ceiling will keep producing spectacle, but the ledger will only flip if the RB slot stops being an invisible man."
+    }
+  ]
+}
