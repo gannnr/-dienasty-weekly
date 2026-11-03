@@ -41,6 +41,20 @@
       "film_room": "Film room: Connecticut Cheddarwurst dropped 140.06 in a loss to Wes Mantooth (149.89). Drake Maye accounted for 33.46 and Ja'Marr Chase chipped 30.35 while Trey McBride added 18.45 — combined those three were 58.7% of the counted week, and WRs piled 81.75 points versus RBs’ tiny 6.4. Over three weeks the team logged 124.8 → 181.71 → 140.06, a boom-bust pulse where QB/WR fireworks carry the load but RB scarcity sets panic.",
       "bigger_conspiracy": "Conspiracy: this roster built like a nightclub DJ who only plays bangers — top-three share 58.7% means when Maye plus two superstars hit, the room erupts; when they don’t, the lights go out. Meaningful insight: with WRs delivering 81.75 points and RBs barely existing (6.4), the counted lineup lacked positional diversification — that explains the -9.83 matchup margin and schedule_luck of -0.67.",
       "next_episode": "Next episode: the soap-opera engine keeps selling tickets because Maye’s ceiling will keep producing spectacle, but the ledger will only flip if the RB slot stops being an invisible man."
+    },
+    {
+      "roster_id": 4,
+      "headline": "Wes Mantooth’s QB/TE Tango: Narrow Win, Massive Variance",
+      "film_room": "Film room: Wes Mantooth’s best-ball auto-lineup belted 149.89 points to squeak past Connecticut Cheddarwurst’s 140.06 — Josh Allen (32.56) and Bo Nix (24.28) combined for a QB duo that supplied 56.84 points while Dalton Kincaid’s TE work (17.60) pulled surprising leverage. WRs chipped 56.95 but RBs lagged at 18.5, so the counted five skewed toward air and tight-end production.",
+      "bigger_conspiracy": "Conspiracy corner: schedule luck 1.22 and a weekly matchup margin of +9.83 suggest Mantooth’s win wasn’t a mercy check but a favorable seating chart at the fantasy banquet. Meaningful insight — QB position produced 56.84 points while RBs only 18.5: that positional imbalance reduced correlation risk (fewer multi-positional scoring engines) but amplified ceiling when Josh Allen went nuclear.",
+      "next_episode": "Next episode: the owner will keep relying on elite QB/TE output because it converts to points fast; with top contributors Allen, Nix and Kincaid supplying nearly half this week’s damage, expect more clutch squeakers or cinematic collapses — either way, Wes just taught the league how to win by asking fewer players to do all the heavy lifting."
+    },
+    {
+      "roster_id": 1,
+      "headline": "StinkyButt69’s QB Choir Goes Nuclear: Burrow, Ward, and RB Depth Sing the Planet Into Submission",
+      "film_room": "Film room: best-ball auto-lineups don’t beg; they execute. StinkyButt69’s counted five lit the scoreboard for 220.94 points — Joe Burrow led with 54.48 and Cam Ward added 33.26 while Bhayshul Tuten (31.40), Jaylen Warren (23.05) and Bucky Irving (23.00) supplied a bruising backfield trio. That QB+RB combo produced QB 87.74 and RB 77.45 — a rare week where both signal-caller depth and multi‑RB output counted.",
+      "bigger_conspiracy": "Bigger conspiracy: top-three share 53.9% means more than half the week’s value landed in Burrow and two RBs, but the advanced insight is lineup correlation — having two counted QBs (Burrow/Ward) plus three RBs turned variance into redundancy. Counted positional haul (QB 87.74, RB 77.45, WR 39.95, TE 15.8) shows the team bought both ceiling and safety; schedule_luck -1.0 didn’t stop them.",
+      "next_episode": "Next episode: the conductor will keep rotating QBs and riding the RB breadth — top contributors already supply a majority of scoring and the all-play perfection says opponents should bring hearing protection."
     }
   ]
 }
