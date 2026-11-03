@@ -1,0 +1,88 @@
+{
+  "season": 2026,
+  "week": 8,
+  "source": "Sleeper Fantasy Data Hub Supabase nfl_player_game joined to nfl_players; verified 2026 Week 8 records",
+  "players": [
+    {
+      "name": "Tee Higgins",
+      "team": "CIN",
+      "opponent": "TEN",
+      "espn_id": "4239993",
+      "kind": "receiving",
+      "label": "TARGET VACUUM",
+      "metrics": [
+        [
+          "TARGETS",
+          11
+        ],
+        [
+          "RECEPTIONS",
+          10
+        ],
+        [
+          "REC YARDS",
+          155
+        ],
+        [
+          "REC TD",
+          2
+        ]
+      ],
+      "story": "11 targets, 10 receptions, 155 receiving yards and two touchdowns. Cincinnati's passing game turned the Titans secondary into a weeklong highlight reel."
+    },
+    {
+      "name": "Tyler Allgeier",
+      "team": "ARI",
+      "opponent": "DAL",
+      "espn_id": "4373626",
+      "kind": "rushing",
+      "label": "WORKLOAD LANDLORD",
+      "metrics": [
+        [
+          "CARRIES",
+          11
+        ],
+        [
+          "TARGETS",
+          5
+        ],
+        [
+          "RUSH YARDS",
+          147
+        ],
+        [
+          "RUSH TD",
+          1
+        ]
+      ],
+      "story": "147 rushing yards on 11 carries, plus five catches for 44 yards and a receiving touchdown. Efficiency so outrageous the workload department asked to see the receipts."
+    },
+    {
+      "name": "Joe Burrow",
+      "team": "CIN",
+      "opponent": "TEN",
+      "espn_id": "3915511",
+      "kind": "passing",
+      "label": "AIR RAID COMMANDER",
+      "metrics": [
+        [
+          "ATTEMPTS",
+          48
+        ],
+        [
+          "COMPLETIONS",
+          38
+        ],
+        [
+          "PASS YARDS",
+          462
+        ],
+        [
+          "PASS TD",
+          5
+        ]
+      ],
+      "story": "462 passing yards, five passing touchdowns on 48 attempts. Cincinnati's aerial attack made the scoreboard file for overtime pay."
+    }
+  ]
+}
