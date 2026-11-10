@@ -1,6 +1,10 @@
 name: Publish DieNasty weekly recap
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-weekly.yml'
   schedule:
     # GitHub Actions cron uses UTC; timezone keys are unsupported.
     # 08:00 Central in either daylight or standard time; select by local hour.
