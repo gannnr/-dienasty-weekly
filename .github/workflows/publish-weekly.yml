@@ -5,6 +5,10 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/publish-weekly.yml'
+      - 'generate_weekly.py'
+      - 'validate_report.py'
+      - 'build_nfl_reality.py'
+      - 'ai_narratives.py'
   schedule:
     # GitHub Actions cron uses UTC; timezone keys are unsupported.
     # 08:00 Central in either daylight or standard time; select by local hour.
@@ -25,7 +29,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 8
     steps:
       - name: Check local scheduled hour
         id: schedule_gate
