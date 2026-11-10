@@ -25,7 +25,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 25
     steps:
       - name: Check local scheduled hour
         id: schedule_gate
@@ -57,7 +57,7 @@ jobs:
           DIENASTY_AI_MODEL: gpt-5-mini
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
-        run: python generate_weekly.py
+        run: python -u generate_weekly.py
       - name: Validate generated report quality
         if: steps.schedule_gate.outputs.run == 'true'
         run: python validate_report.py
