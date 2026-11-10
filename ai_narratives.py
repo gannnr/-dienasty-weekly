@@ -149,7 +149,7 @@ def generate(week, facts):
         completed={}
     def write_group(group):
         accepted={}
-        for attempt in range(2):
+        for attempt in range(3):
             payload={"model":MODEL,"instructions":guide+
                      " Generate ONLY the supplied managers. Every story must total 190-210 words. "
                      "Use the assigned voice and avoid any repeated federal-investigation jokes. No raw variable names or lineup-setting advice in this BEST BALL league. Return complete JSON.",
@@ -194,11 +194,11 @@ def generate(week, facts):
                     except (ValueError,UnicodeError):
                         pass
                 print("AI small-batch attempt",attempt+1,"failed:",detail)
-            if group and attempt<1:
+            if group and attempt<2:
                 time.sleep(1)
         return accepted
     batches=[[f for f in facts[i:i+1] if f["roster_id"] not in completed] for i in range(0,len(facts),1)]
-    with ThreadPoolExecutor(max_workers=4) as pool:
+    with ThreadPoolExecutor(max_workers=2) as pool:
         futures=[pool.submit(write_group,b) for b in batches if b]
         for future in as_completed(futures):
             completed.update(future.result())
