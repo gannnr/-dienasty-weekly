@@ -41,6 +41,20 @@
       "film_room": "Film-room breakdown: Wes Mantooth’s best-ball auto-lineup posted 152.10 and still folded to The Chavenators’ 187.06 — Josh Allen (27.59) and Amon‑Ra St. Brown (24.80) were the counted workhorses while Omarion Hampton (19.25) and DJ Moore (18.40) filled in the gaps. The counted composition leaned WRs (69.01) far ahead of RBs (45.55) and TE (9.95); top-three share 47.1% shows nearly half the week rode on three engines.",
       "bigger_conspiracy": "Conspiracy cutaway: meaningful advanced insight — WR positional haul of 69.01 outpaced QB (27.59) and RBs combined, meaning the auto-lineup’s ceiling depends on WR correlation across multiple receivers rather than a multi-QB hedge. All-play 4–5 and schedule_luck 0.78 explain the scoreboard: the roster did enough in raw scoring but lost because the opponent produced more across counted spots.",
       "next_episode": "Next episode: Mantooth will keep auditioning high‑ceiling WRs and hope Allen keeps setting off fireworks; with top counted contributors supplying nearly half this week’s points, expect future weeks to be cinematic — either Oscar‑bait or the kind of flop that sells out late-night reviews."
+    },
+    {
+      "roster_id": 6,
+      "headline": "Two-TE Tango Meets RB Bond: Isaiah Likely Prints, Pollard Pays the Rent",
+      "film_room": "Film-room autopsy: Lamar hit it, Cam came posted 134.02 in a loss where Isaiah Likely (27.45) and Chase Brown (26.30) were the counted MVPs while Tony Pollard (21.90) also chipped in — those three combined for 56.4% of counted scoring. Counted positional haul shows RBs 55.65, TE 39.35, QB 24.27 and WR 14.75; over the last three weeks the ledger reads 140.56 → 152.09 → 134.02, a modest retracement after a spike.",
+      "bigger_conspiracy": "Conspiracy memo: top-five share 56.4% signals high active concentration and schedule luck 3.22 indicates this roster outscored many but ran into a juggernaut. Meaningful advanced insight — TE positional output (39.35 across counted TEs) materially exceeded WR production (14.75), flipping the usual correlation: having two heavy TE contributors meant the auto-lineup relied on tight-end arbitrage instead of perimeter depth.",
+      "next_episode": "Next episode: the fund will keep leaning into two-TE upside and RB depth since the counted RB haul cushions QB mediocrity (QB just 24.27)."
+    },
+    {
+      "roster_id": 7,
+      "headline": "Glaze, Grit, and a QB Volcano: Krispy Kremepie’s Bakery Burned Out by The fighting greeks’ Buffet",
+      "film_room": "Film room: Krispy Kremepie’s auto-lineup produced 132.66 points in a LOSS while The fighting greeks poured 180.08 on the scoreboard — counted contributors show Chuba Hubbard 32.95 and Justin Herbert 17.76 leading the way with Garrett Wilson (15.85) and Justin Jefferson (14.15) also in the counted five. Positional haul: RBs 45.2, QB 17.76, WRs 65.4, TE 4.3 — the WR group provided the highest single-position output while QB counted production was minimal.",
+      "bigger_conspiracy": "Bigger conspiracy: meaningful advanced insight — top-three share 50.2% means half your scoring came from Chuba Hubbard plus two pass-catchers. That concentration created a brittle correlation profile: when Hubbard popped and Herbert underdelivered (QB just 17.76 counted), the WR-heavy engine couldn’t fully compensate against an opponent with broader positional balance.",
+      "next_episode": "Next episode: Krispy Kremepie stays a patisserie that bets the house on a few signature pastries — when Chuba stays hot the scoreboard licks the bowl, but this week the bakery lost to someone who baked an entire banquet."
     }
   ]
 }
