@@ -1,0 +1,39 @@
+{
+  "managers": [
+    {
+      "roster_id": 6,
+      "headline": "Two-TE Arbitrage and Mendoza’s Quiet Rally: Undefeated Accounting Survives a Best-Ball Audit",
+      "film_room": "Film room: Lamar hit it, Cam came posted 153.62 in a WIN over Krispy Kremepie — Fernando Mendoza (31.63) and Geno Smith (25.69) lead the counted five while Javonte Williams (23.35) and George Kittle (17.65) supplied finishing work. Counted positional output shows QBs 57.32, RBs 36.35, WRs 32.7 and TE 27.25; top-three share is 52.5% so more than half the points funneled through the ultra-lean core.",
+      "bigger_conspiracy": "Bigger conspiracy: advanced insight — QB aggregate (57.32) outscored RBs and WRs and the counted TE output (27.25) paired with RB depth to create a unique arbitrage effect. Explanation: when two tight end/TE-ish contributors (Kittle plus supporting TE value inside the counted five) push TE scoring above typical floors, the auto-lineup flips correlation — QB upside compounds with TE durability and the RBs merely collect interest.",
+      "next_episode": "Next episode: expect Mendoza/Geno to continue anchoring outcomes while the TE/RB blend functions like low-volatility alpha. Savage closer: this portfolio invoices opponents for touchdowns and then cashes the check in the end zone."
+    },
+    {
+      "roster_id": 5,
+      "headline": "Two-QB Buffet Goes Nuclear: 4whoresman Turns RB Depth Into a Buffet of Domination",
+      "film_room": "Film room: 4whoresman’s best-ball auto-lineup exploded for 162.49 points in a WIN over Wes Mantooth, with Jonah Coleman (35.90) and Jared Goff (32.36) leading the counted five while Derrick Henry (18.10), Tyler Shough (17.28) and James Cook III (16.70) filled the slab. Counted positional output shows RBs 84.4 vs QBs 49.64 vs WRs 23.9 vs TE 4.55 — an RB-first week where the top-three share (53.1%) reveals concentrated but multi-RB durability.",
+      "bigger_conspiracy": "Bigger conspiracy: meaningful advanced insight — RB positional haul of 84.4 points underwrote the two‑QB strategy and converted Jared Goff’s QB fireworks into a blowout rather than a squeak. All-play results (7–2) and a +58.83 weekly matchup margin confirm the counted composition crushed correlation risk this week: two QBs plus three high-floor RBs meant when one RB strolled, another stomped, and the opponent couldn’t string positional balance together.",
+      "next_episode": "Next episode: expect continued RB-levered volcanics because the counted engine leans on multi‑RB depth to smooth two‑QB volatility; with season points 1,794.87 (third in scoring) this buffet will keep serving pain."
+    },
+    {
+      "roster_id": 1,
+      "headline": "StinkyButt69: A One-Point Symphony of QB Depth and WR Glue That Somehow Lost the Encore",
+      "film_room": "Film room: StinkyButt69’s auto-lineup posted 172.22 and lost 172.22–173.66 — Cam Ward led with 33.22 and CeeDee Lamb chipped 29.45 while Joe Burrow added 28.90. Counted composition shows QBs 62.12, WRs 62.20, RBs 44.05 and TE 3.85; top-three share sits at 53.2%. The three-week trend (190.27 → 183.99 → 172.22) is a slow bleed from an apex: elite QB/WR scoring is holding a high floor but shrinking slightly.",
+      "bigger_conspiracy": "Bigger conspiracy: meaningful advanced insight — the counted QB output (62.12) nearly matched WR output (62.20), meaning this roster’s auto-lineup relied on true multi-QB correlation rather than single-signal heroics. Explanation: with two QBs contributing heavily, variance was converted to redundancy; yet schedule_luck −1.44 and a −1.44 weekly matchup margin turned that redundancy into a heartbreak — the opponent simply eked out one more tick.",
+      "next_episode": "Next episode: the ensemble stays intact — Burrow, Ward and Lamb will keep providing the majority of scoring (top-three share 53.2%) while RB depth covers floors."
+    },
+    {
+      "roster_id": 10,
+      "headline": "The fighting greeks: Narrow QB pyrotechnics turn a Best-Ball squeaker into a tragicomic ledger win",
+      "film_room": "Film room: The fighting greeks auto-lineup eked out a 142.24–141.44 WIN where Jahmyr Gibbs (26.80) and Travis Kelce (23.90) and Aaron Rodgers (20.98) were the counted leaders. Counted positional output shows QB = 41.79, TE = 33.9, WR = 33.85, RB = 32.7 and the top-three share was 50.4% — meaning half the week’s value rode three scorers.",
+      "bigger_conspiracy": "Conspiracy board: schedule_luck −1.0 makes this feel like a win you earned the hard way. Meaningful advanced insight — QB positional haul (41.79) exceeded RB (32.7), so this roster leaned signal‑caller production over ground-game depth; in best ball that tilt buys upside but reduces redundancy.",
+      "next_episode": "Next episode: the fighting greeks will keep auto‑rotating QB fireworks and pray the WR floor inflates; with season points 1,772.21 (rank 5), scoring‑deserved‑wins 6.00 vs actual 5, and top‑three share 50.4%, expect another cinematic squeaker — savage closer: you won like a Greek tragedy that forgot the epilogue, and the chorus is demanding overtime."
+    },
+    {
+      "roster_id": 4,
+      "headline": "Wes Mantooth’s Best-Ball Meltdown: QB/WR Tango Gets Steamrolled by an All‑Play Tyrant",
+      "film_room": "Film room: Wes Mantooth’s auto-lineup coughed up 103.66 points in a LOSS to 4whoresman’s 162.49 — DJ Moore (21.10) was the week’s top counted WR and Josh Allen (17.41) the top counted QB, with Amon‑Ra St. Brown adding 13.45. The counted five split WR 44.35, QB 30.66, RB 24.65 and TE 4.0; top-three share 50.1% means half the scoring lived in three players.",
+      "bigger_conspiracy": "Bigger conspiracy: all‑play 1–8 and a −58.83 weekly matchup margin reveal Mantooth’s week was not bad luck, it was a structural implosion. Meaningful advanced insight — WRs supplied 44.35 points while QBs only 30.66 and RBs 24.65: the WR/QB weighting created correlation fragility; when Moore and St.",
+      "next_episode": "Next episode: the script stays the same — elite top-three performers show up but the supporting cast keeps mailing it in; with season points 1,614.86 (rank 8) and schedule_luck only 0.67, Wes’s team is a fireworks truck with no driver — spectacular explosions, catastrophic collisions. Savage closer: he drafted a concerto and got a kazoo solo at the finale."
+    }
+  ]
+}
